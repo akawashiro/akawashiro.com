@@ -5,6 +5,10 @@ layout: default
 
 # インサイド Windows 読書メモ
 
+## Twitter のメモスレッド
+
+[https://x.com/a_kawashiro/status/1850138731350733208](https://x.com/a_kawashiro/status/1850138731350733208)
+
 ## カーネルデバッガを使えるようにする方法
 - 仮想マシンを作る
     - [Windows での Hyper-V による仮想マシンの作成](https://learn.microsoft.com/ja-jp/virtualization/hyper-v-on-windows/quick-start/create-virtual-machine)
@@ -84,3 +88,9 @@ fffff804`6cc201d0 cc              int     3
    +0x110 RedirectObject   : Ptr64 Void
    +0x118 Padding          : [8] UChar
 ```
+
+## よく出てくる単語
+
+### `Ntdll.dll`
+
+大事な何からしい。

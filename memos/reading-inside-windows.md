@@ -1,3 +1,8 @@
+---
+title: インサイド Windows 読書メモ
+layout: default
+---
+
 # インサイド Windows 読書メモ
 
 ## カーネルデバッガを使えるようにする方法

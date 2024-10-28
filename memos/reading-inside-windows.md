@@ -89,6 +89,11 @@ fffff804`6cc201d0 cc              int     3
    +0x118 Padding          : [8] UChar
 ```
 
+# `Ntoskrnl.exe` の依存関係を見る
+
+`DependenciesGui C:\Windows\System32\ntoskrnl.exe` を実行する。
+![Ntoskrnl.exe の依存関係](./DependencyOfNtoskrnl.png)
+
 ## よく出てくる単語
 
 ### `Ntdll.dll`

@@ -6,14 +6,16 @@ layout: default
 # Windows でのプロセスの起動 <!-- omit in toc -->
 この記事では Windows 上で `cmd.exe` (いわゆる「コマンドプロンプト」です) から `notepad.exe` (「メモ帳」です) を起動した際に起きることを観察します。
 
+## 注意 <!-- omit in toc -->
+
+Windows はソースコードが公開されていないため、内部の詳細な挙動についてはどうしても断言できません。このため、この記事は歯切れの悪い点が多数あります。
+
 - [準備](#準備)
 - [CreateProcessW の呼び出し](#createprocessw-の呼び出し)
 - [Notepad.exe プロセスの開始](#notepadexe-プロセスの開始)
-  - [Event タブ](#event-タブ)
-  - [Process タブ](#process-タブ)
-  - [Stack タブ](#stack-タブ)
 - [Notepad.exe のメモリへの読み込み](#notepadexe-のメモリへの読み込み)
 - [その後の Image の読み込み](#その後の-image-の読み込み)
+- [終わりに](#終わりに)
 - [参考](#参考)
 
 
@@ -33,8 +35,6 @@ Process monitor を使って `cmd.exe` と `notepad.exe` の挙動を監視で�
 
 `notepad.exe` の起動は `cmd.exe` から `CreateProcessW` を呼び出すところから始まります。
 下の画像で青く選択されているイベントです。
-[CreateProcessW](https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw) とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
-選択しているイベントの直後に、`Process Start`と`Thread Create`の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しています。
 
 <img src="process_monitor.png" width="100%">
 
@@ -64,11 +64,20 @@ Process monitor を使って `cmd.exe` と `notepad.exe` の挙動を監視で�
 15	ntdll.dll	RtlUserThreadStart + 0x28	0x7ffe4752af08	C:\Windows\SYSTEM32\ntdll.dll
 ```
 
-ここには `cmd.exe` が [CreateProcessW](https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw) を呼び出して `notepad.exe` のためのプロセスを作った際のスタックトレースが表示されています。
+ここには `cmd.exe` が [CreateProcessW](https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw) を呼び出して `notepad.exe` のためのプロセスを作った際のスタックトレースが表示されており、
+`cmd.exe` が最終的にカーネル (`ntoskrnlexe`)の機能を呼び出すまでに、`KERNEL32.DLL`、`KERNELBASE.dll`、`ntdll.dll`の 3つの DLL を経由することがわかります。
+ここからは、このコールスタックを下から、つまり Notepad.exe 側から詳細に見ていきます。
 
-まず、`cmd.exe` が最終的にカーネル (`ntoskrnlexe`)の機能を呼び出すまでに、`KERNEL32.DLL`、`KERNELBASE.dll`、`ntdll.dll`の 3つの DLL を経由することがわかります。
-また、興味深いことに、ユーザ空間からカーネル空間に遷移する際に `3	ntoskrnl.exe	setjmpex + 0x90d8	0xfffff80164c2a408	C:\Windows\system32\ntoskrnl.exe` を経由しており、`setjmpex` が呼び出されていることがわかります。
+[CreateProcessW](https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw) とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
+選択しているイベントの直後に、`Process Start`と`Thread Create`の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しているように見えます。
+
+[NtCreateUserProcess](https://j00ru.vexillium.org/syscalls/nt/64/) とは Windows の system call の一つであり、[https://j00ru.vexillium.org/syscalls/nt/64/](https://j00ru.vexillium.org/syscalls/nt/64/) で実際に system call の番号を調べることができます。Linux ユーザに向けて特筆すべきなのは、この番号が Windows のバージョンで変化する点です。これは静的リンクしたバイナリの互換性が Windows のバージョンをまたいで保たれないことを意味するはずです。
+
+興味深いことに、ユーザ空間からカーネル空間に遷移する際に `3	ntoskrnl.exe	setjmpex + 0x90d8	0xfffff80164c2a408	C:\Windows\system32\ntoskrnl.exe` を経由しており、`setjmpex` が呼び出されていることがわかります。
 この `setjmpex` を呼び出す理由はわかっていませんが、カーネル内で処理が失敗した場合に `longjmp` で戻ることができるようにするためであろうと推測しています。
+
+[FsRtlFreeExtraCreateParameter](https://learn.microsoft.com/ja-jp/windows-hardware/drivers/ddi/ntifs/nf-ntifs-fsrtlfreeextracreateparameter)、LpcRequestPort、MmGetSectionInformation については詳細がわかりませんでした。
+ソースコードが公開されていないとこういう点がつらいですね。
 
 ## Notepad.exe プロセスの開始
 
@@ -76,7 +85,7 @@ Process monitor を使って `cmd.exe` と `notepad.exe` の挙動を監視で�
 
 <img src="start_notepad_exe_process.png" width="100%">
 
-### Event タブ
+### Event タブ <!-- omit in toc -->
 
 まず、Event タブからは環境変数、親プロセスの PID など Linux と同様の情報が渡されていることがわかります。
 
@@ -137,7 +146,7 @@ Environment:
 	windir=C:\Windows
 ```
 
-### Process タブ
+### Process タブ <!-- omit in toc -->
 
 Process タブには PID などのほかに Auth ID という見慣れない情報が表示されています。
 これは TODO です。
@@ -164,7 +173,7 @@ Ended:	11/9/2024 6:17:25 PM
 Modules:
 ```
 
-### Stack タブ
+### Stack タブ <!-- omit in toc -->
 
 Stack タブを見るとカーネル (`ntoskrnl.exe`)以外の関数についてシンボルの情報が消えています。
 しかし、良く見比べるとこれは [CreateProcessW の呼び出し](#createprocessw-の呼び出し) で見たアドレスと同一です。
@@ -223,7 +232,7 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 
 `notepad.exe` の後は様々な Image が読み込まれていきます。
 非常に長いので折りたたんでおきますが、`ntdll.dll`、`kernel32.dll`、`KernelBase.dll` などの基本的なものからメモリ上に読み込まれていくようです。
-
+更に憶測を書くと、最初に`ntdll.dll`を読み込んでいくことから、依存関係の葉になる DLL から読み込んでいくと考えられます。
 
 <details>
 
@@ -430,6 +439,11 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 
 `notepad.exe` が依存している DLL は [Dependencies - An open-source modern Dependency Walker](https://github.com/lucasg/Dependencies) で調べることができ、実際 `Load Image` で読み込まれた DLL に依存していることがわかります。
 <img src="notepad_exe_dependencies.png" width="100%">
+
+## 終わりに
+
+この記事では Windows におけるプロセスの起動を観察しました。
+ソースコードが公開されていないため、詳細な実装は想像で書いている部分が多分にあります。
 
 ## 参考
 

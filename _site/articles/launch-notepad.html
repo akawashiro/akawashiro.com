@@ -36,18 +36,17 @@
         <h1 id="windows-でのプロセスの起動-">Windows でのプロセスの起動 <!-- omit in toc --></h1>
 <p>この記事では Windows 上で <code class="language-plaintext highlighter-rouge">cmd.exe</code> (いわゆる「コマンドプロンプト」です) から <code class="language-plaintext highlighter-rouge">notepad.exe</code> (「メモ帳」です) を起動した際に起きることを観察します。</p>
 
+<h2 id="注意-">注意 <!-- omit in toc --></h2>
+
+<p>Windows はソースコードが公開されていないため、内部の詳細な挙動についてはどうしても断言できません。このため、この記事は歯切れの悪い点が多数あります。</p>
+
 <ul>
   <li><a href="#準備">準備</a></li>
   <li><a href="#createprocessw-の呼び出し">CreateProcessW の呼び出し</a></li>
-  <li><a href="#notepadexe-プロセスの開始">Notepad.exe プロセスの開始</a>
-    <ul>
-      <li><a href="#event-タブ">Event タブ</a></li>
-      <li><a href="#process-タブ">Process タブ</a></li>
-      <li><a href="#stack-タブ">Stack タブ</a></li>
-    </ul>
-  </li>
+  <li><a href="#notepadexe-プロセスの開始">Notepad.exe プロセスの開始</a></li>
   <li><a href="#notepadexe-のメモリへの読み込み">Notepad.exe のメモリへの読み込み</a></li>
   <li><a href="#その後の-image-の読み込み">その後の Image の読み込み</a></li>
+  <li><a href="#終わりに">終わりに</a></li>
   <li><a href="#参考">参考</a></li>
 </ul>
 
@@ -66,9 +65,7 @@
 <h2 id="createprocessw-の呼び出し">CreateProcessW の呼び出し</h2>
 
 <p><code class="language-plaintext highlighter-rouge">notepad.exe</code> の起動は <code class="language-plaintext highlighter-rouge">cmd.exe</code> から <code class="language-plaintext highlighter-rouge">CreateProcessW</code> を呼び出すところから始まります。
-下の画像で青く選択されているイベントです。
-<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a> とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
-選択しているイベントの直後に、<code class="language-plaintext highlighter-rouge">Process Start</code>と<code class="language-plaintext highlighter-rouge">Thread Create</code>の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しています。</p>
+下の画像で青く選択されているイベントです。</p>
 
 <p><img src="process_monitor.png" width="100%" /></p>
 
@@ -97,11 +94,20 @@
 15	ntdll.dll	RtlUserThreadStart + 0x28	0x7ffe4752af08	C:\Windows\SYSTEM32\ntdll.dll
 </code></pre></div></div>
 
-<p>ここには <code class="language-plaintext highlighter-rouge">cmd.exe</code> が <a href="https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a> を呼び出して <code class="language-plaintext highlighter-rouge">notepad.exe</code> のためのプロセスを作った際のスタックトレースが表示されています。</p>
+<p>ここには <code class="language-plaintext highlighter-rouge">cmd.exe</code> が <a href="https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a> を呼び出して <code class="language-plaintext highlighter-rouge">notepad.exe</code> のためのプロセスを作った際のスタックトレースが表示されており、
+<code class="language-plaintext highlighter-rouge">cmd.exe</code> が最終的にカーネル (<code class="language-plaintext highlighter-rouge">ntoskrnlexe</code>)の機能を呼び出すまでに、<code class="language-plaintext highlighter-rouge">KERNEL32.DLL</code>、<code class="language-plaintext highlighter-rouge">KERNELBASE.dll</code>、<code class="language-plaintext highlighter-rouge">ntdll.dll</code>の 3つの DLL を経由することがわかります。
+ここからは、このコールスタックを下から、つまり Notepad.exe 側から詳細に見ていきます。</p>
 
-<p>まず、<code class="language-plaintext highlighter-rouge">cmd.exe</code> が最終的にカーネル (<code class="language-plaintext highlighter-rouge">ntoskrnlexe</code>)の機能を呼び出すまでに、<code class="language-plaintext highlighter-rouge">KERNEL32.DLL</code>、<code class="language-plaintext highlighter-rouge">KERNELBASE.dll</code>、<code class="language-plaintext highlighter-rouge">ntdll.dll</code>の 3つの DLL を経由することがわかります。
-また、興味深いことに、ユーザ空間からカーネル空間に遷移する際に <code class="language-plaintext highlighter-rouge">3	ntoskrnl.exe	setjmpex + 0x90d8	0xfffff80164c2a408	C:\Windows\system32\ntoskrnl.exe</code> を経由しており、<code class="language-plaintext highlighter-rouge">setjmpex</code> が呼び出されていることがわかります。
+<p><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a> とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
+選択しているイベントの直後に、<code class="language-plaintext highlighter-rouge">Process Start</code>と<code class="language-plaintext highlighter-rouge">Thread Create</code>の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しているように見えます。</p>
+
+<p><a href="https://j00ru.vexillium.org/syscalls/nt/64/">NtCreateUserProcess</a> とは Windows の system call の一つであり、<a href="https://j00ru.vexillium.org/syscalls/nt/64/">https://j00ru.vexillium.org/syscalls/nt/64/</a> で実際に system call の番号を調べることができます。Linux ユーザに向けて特筆すべきなのは、この番号が Windows のバージョンで変化する点です。これは静的リンクしたバイナリの互換性が Windows のバージョンをまたいで保たれないことを意味するはずです。</p>
+
+<p>興味深いことに、ユーザ空間からカーネル空間に遷移する際に <code class="language-plaintext highlighter-rouge">3	ntoskrnl.exe	setjmpex + 0x90d8	0xfffff80164c2a408	C:\Windows\system32\ntoskrnl.exe</code> を経由しており、<code class="language-plaintext highlighter-rouge">setjmpex</code> が呼び出されていることがわかります。
 この <code class="language-plaintext highlighter-rouge">setjmpex</code> を呼び出す理由はわかっていませんが、カーネル内で処理が失敗した場合に <code class="language-plaintext highlighter-rouge">longjmp</code> で戻ることができるようにするためであろうと推測しています。</p>
+
+<p><a href="https://learn.microsoft.com/ja-jp/windows-hardware/drivers/ddi/ntifs/nf-ntifs-fsrtlfreeextracreateparameter">FsRtlFreeExtraCreateParameter</a>、LpcRequestPort、MmGetSectionInformation については詳細がわかりませんでした。
+ソースコードが公開されていないとこういう点がつらいですね。</p>
 
 <h2 id="notepadexe-プロセスの開始">Notepad.exe プロセスの開始</h2>
 
@@ -109,7 +115,7 @@
 
 <p><img src="start_notepad_exe_process.png" width="100%" /></p>
 
-<h3 id="event-タブ">Event タブ</h3>
+<h3 id="event-タブ-">Event タブ <!-- omit in toc --></h3>
 
 <p>まず、Event タブからは環境変数、親プロセスの PID など Linux と同様の情報が渡されていることがわかります。</p>
 
@@ -169,7 +175,7 @@ Environment:
 	windir=C:\Windows
 </code></pre></div></div>
 
-<h3 id="process-タブ">Process タブ</h3>
+<h3 id="process-タブ-">Process タブ <!-- omit in toc --></h3>
 
 <p>Process タブには PID などのほかに Auth ID という見慣れない情報が表示されています。
 これは TODO です。
@@ -195,7 +201,7 @@ Ended:	11/9/2024 6:17:25 PM
 Modules:
 </code></pre></div></div>
 
-<h3 id="stack-タブ">Stack タブ</h3>
+<h3 id="stack-タブ-">Stack タブ <!-- omit in toc --></h3>
 
 <p>Stack タブを見るとカーネル (<code class="language-plaintext highlighter-rouge">ntoskrnl.exe</code>)以外の関数についてシンボルの情報が消えています。
 しかし、良く見比べるとこれは <a href="#createprocessw-の呼び出し">CreateProcessW の呼び出し</a> で見たアドレスと同一です。
@@ -251,7 +257,8 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 <h2 id="その後の-image-の読み込み">その後の Image の読み込み</h2>
 
 <p><code class="language-plaintext highlighter-rouge">notepad.exe</code> の後は様々な Image が読み込まれていきます。
-非常に長いので折りたたんでおきますが、<code class="language-plaintext highlighter-rouge">ntdll.dll</code>、<code class="language-plaintext highlighter-rouge">kernel32.dll</code>、<code class="language-plaintext highlighter-rouge">KernelBase.dll</code> などの基本的なものからメモリ上に読み込まれていくようです。</p>
+非常に長いので折りたたんでおきますが、<code class="language-plaintext highlighter-rouge">ntdll.dll</code>、<code class="language-plaintext highlighter-rouge">kernel32.dll</code>、<code class="language-plaintext highlighter-rouge">KernelBase.dll</code> などの基本的なものからメモリ上に読み込まれていくようです。
+更に憶測を書くと、最初に<code class="language-plaintext highlighter-rouge">ntdll.dll</code>を読み込んでいくことから、依存関係の葉になる DLL から読み込んでいくと考えられます。</p>
 
 <details>
 
@@ -458,6 +465,11 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 
 <p><code class="language-plaintext highlighter-rouge">notepad.exe</code> が依存している DLL は <a href="https://github.com/lucasg/Dependencies">Dependencies - An open-source modern Dependency Walker</a> で調べることができ、実際 <code class="language-plaintext highlighter-rouge">Load Image</code> で読み込まれた DLL に依存していることがわかります。
 <img src="notepad_exe_dependencies.png" width="100%" /></p>
+
+<h2 id="終わりに">終わりに</h2>
+
+<p>この記事では Windows におけるプロセスの起動を観察しました。
+ソースコードが公開されていないため、詳細な実装は想像で書いている部分が多分にあります。</p>
 
 <h2 id="参考">参考</h2>
 

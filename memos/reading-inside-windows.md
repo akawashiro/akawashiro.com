@@ -94,8 +94,16 @@ fffff804`6cc201d0 cc              int     3
 `DependenciesGui C:\Windows\System32\ntoskrnl.exe` を実行する。
 ![Ntoskrnl.exe の依存関係](./DependencyOfNtoskrnl.png)
 
-## よく出てくる単語
+## 気になった単語
 
 ### `Ntdll.dll`
 
 大事な何からしい。
+
+### スーパーフェッチ
+
+ページングを最適化する何か?
+
+### PFN
+
+### スキャッター / ギャザー IO

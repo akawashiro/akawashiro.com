@@ -34,7 +34,7 @@
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
         <h1 id="windows-でのプロセスの起動-">Windows でのプロセスの起動 <!-- omit in toc --></h1>
-<p>この記事では Windows 上で <code class="language-plaintext highlighter-rouge">cmd.exe</code> (いわゆる「コマンドプロンプト」です) から <code class="language-plaintext highlighter-rouge">notepad.exe</code> (「メモ帳」です) を起動した際に起きることを解説します。</p>
+<p>この記事では Windows 上で <code class="language-plaintext highlighter-rouge">cmd.exe</code> (いわゆる「コマンドプロンプト」です) から <code class="language-plaintext highlighter-rouge">notepad.exe</code> (「メモ帳」です) を起動した際に起きることを観察します。</p>
 
 <ul>
   <li><a href="#準備">準備</a></li>
@@ -66,7 +66,9 @@
 <h2 id="createprocessw-の呼び出し">CreateProcessW の呼び出し</h2>
 
 <p><code class="language-plaintext highlighter-rouge">notepad.exe</code> の起動は <code class="language-plaintext highlighter-rouge">cmd.exe</code> から <code class="language-plaintext highlighter-rouge">CreateProcessW</code> を呼び出すところから始まります。
-下の画像で青く選択されているイベントです。</p>
+下の画像で青く選択されているイベントです。
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a> とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
+選択しているイベントの直後に、<code class="language-plaintext highlighter-rouge">Process Start</code>と<code class="language-plaintext highlighter-rouge">Thread Create</code>の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しています。</p>
 
 <p><img src="process_monitor.png" width="100%" /></p>
 

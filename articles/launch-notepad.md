@@ -4,7 +4,7 @@ layout: default
 ---
 
 # Windows でのプロセスの起動 <!-- omit in toc -->
-この記事では Windows 上で `cmd.exe` (いわゆる「コマンドプロンプト」です) から `notepad.exe` (「メモ帳」です) を起動した際に起きることを解説します。
+この記事では Windows 上で `cmd.exe` (いわゆる「コマンドプロンプト」です) から `notepad.exe` (「メモ帳」です) を起動した際に起きることを観察します。
 
 - [準備](#準備)
 - [CreateProcessW の呼び出し](#createprocessw-の呼び出し)
@@ -33,6 +33,8 @@ Process monitor を使って `cmd.exe` と `notepad.exe` の挙動を監視で�
 
 `notepad.exe` の起動は `cmd.exe` から `CreateProcessW` を呼び出すところから始まります。
 下の画像で青く選択されているイベントです。
+[CreateProcessW](https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw) とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
+選択しているイベントの直後に、`Process Start`と`Thread Create`の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しています。
 
 <img src="process_monitor.png" width="100%">
 

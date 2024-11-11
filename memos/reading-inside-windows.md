@@ -21,8 +21,7 @@ layout: default
 - ゲストマシン、ホストマシンに [Windows Driver Kit (WDK) のダウンロード](https://learn.microsoft.com/ja-jp/windows-hardware/drivers/download-the-wdk) から WDK をインストールする
 - [仮想マシンのネットワーク デバッグの設定 - KDNET](https://learn.microsoft.com/ja-jp/windows-hardware/drivers/debugger/setting-up-network-debugging-of-a-virtual-machine-host)
     - ゲストマシンで
-        - `C:\KDNET` に移動
-        - `kdnet 192.168.11.15 50005` を実行
+        - `cd C:\KDNET & kdnet 192.168.11.15 50005` を実行
     - ホストマシンで `"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe"  -k net:port=50005,key=...` を実行
     - ゲストマシンで `shutdown -r -t 0` を実行して再起動
 - そのままだと `Debuggee is running` となって何もできないので Debug -> Break で止めると以下のような画面になるので `0: kd>` の右のところにコマンドを打つ

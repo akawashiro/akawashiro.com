@@ -15,6 +15,7 @@ Windows はソースコードが公開されていないため、内部の詳細
 - [Notepad.exe プロセスの開始](#notepadexe-プロセスの開始)
 - [Notepad.exe のメモリへの読み込み](#notepadexe-のメモリへの読み込み)
 - [その後の Image の読み込み](#その後の-image-の読み込み)
+- [カーネルデバッガでプロセスを観察する](#カーネルデバッガでプロセスを観察する)
 - [終わりに](#終わりに)
 - [参考](#参考)
 
@@ -440,6 +441,122 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 
 `notepad.exe` が依存している DLL は [Dependencies - An open-source modern Dependency Walker](https://github.com/lucasg/Dependencies) で調べることができ、実際 `Load Image` で読み込まれた DLL に依存していることがわかります。
 <img src="notepad_exe_dependencies.png" width="100%">
+
+## カーネルデバッガでプロセスを観察する
+
+カーネルデバッガを接続すると起動したプロセスを観察することができます。
+`Notepad.exe` のプロセスを観察した様子が以下です。
+ここで観察しているプロセスは、先程の Process monitor で観察しているものとは異なる点に注意してください。
+
+Process monitor で観察した際よりもスタックトレースの情報が充実していることがわかります。
+
+```
+1: kd> !process 0 0x1f notepad.exe
+PROCESS ffff938444103080
+    SessionId: 1  Cid: 0650    Peb: 5505372000  ParentCid: 0378
+    DirBase: 96eaa000  ObjectTable: ffff8009077ed2c0  HandleCount: 651.
+    Image: Notepad.exe
+    VadRoot ffff938445e60d90 Vads 243 Clone 0 Private 3533. Modified 47035. Locked 0.
+    DeviceMap ffff800905c10220
+    Token                             ffff80090bf7a770
+    ElapsedTime                       00:02:51.035
+    UserTime                          00:00:00.000
+    KernelTime                        00:00:00.000
+    QuotaPoolUsage[PagedPool]         906168
+    QuotaPoolUsage[NonPagedPool]      33888
+    Working Set Sizes (now,min,max)  (19168, 50, 345) (76672KB, 200KB, 1380KB)
+    PeakWorkingSetSize                22510
+    VirtualSize                       2101687 Mb
+    PeakVirtualSize                   2101710 Mb
+    PageFaultCount                    73760
+    MemoryPriority                    BACKGROUND
+    BasePriority                      8
+    CommitCharge                      4780
+    Job                               ffff938444150060
+
+        THREAD ffff938443570080  Cid 0650.0580  Teb: 0000005505373000 Win32Thread: ffff938445023270 WAIT: (WrUserRequest) UserMode Non-Alertable
+            ffff938445022780  QueueObject
+        Not impersonating
+        DeviceMap                 ffff800905c10220
+        Owning Process            ffff938444103080       Image:         Notepad.exe
+        Attached Process          N/A            Image:         N/A
+        Wait Start TickCount      7555           Ticks: 6298 (0:00:01:38.406)
+        Context Switch Count      398            IdealProcessor: 2             
+        UserTime                  00:00:00.000
+        KernelTime                00:00:00.046
+        Win32 Start Address Notepad (0x00007ff6dc901370)
+        Stack Init ffffa50fc847fc30 Current ffffa50fc847ebe0
+        Base ffffa50fc8480000 Limit ffffa50fc8479000 Call 0000000000000000
+        Priority 8  BasePriority 8  IoPriority 2  PagePriority 5
+        Child-SP          RetAddr               Call Site
+        ffffa50f`c847ec20 fffff807`13e201a5     nt!KiSwapContext+0x76
+        ffffa50f`c847ed60 fffff807`13e215c7     nt!KiSwapThread+0xaa5
+        ffffa50f`c847eeb0 fffff807`13e810c6     nt!KiCommitThreadWait+0x137
+        ffffa50f`c847ef60 fffff807`13eb7533     nt!KeWaitForSingleObject+0x256
+        ffffa50f`c847f300 ffff92a7`f89d91e5     nt!KeWaitForMultipleObjects+0x5d3
+        ffffa50f`c847f560 ffff92a7`f89d8e1f     win32kfull!xxxRealSleepThread+0x315
+        ffffa50f`c847f680 ffff92a7`f89dc58b     win32kfull!xxxSleepThread2+0xaf
+        ffffa50f`c847f6d0 ffff92a7`f89d964c     win32kfull!xxxRealInternalGetMessage+0x15ab
+        ffffa50f`c847f9d0 ffff92a7`f9236ed1     win32kfull!NtUserGetMessage+0x8c
+        ffffa50f`c847fa60 fffff807`1402a408     win32k!NtUserGetMessage+0x15
+        ffffa50f`c847faa0 00007ffa`e9b21534     nt!KiSystemServiceCopyEnd+0x28 (TrapFrame @ ffffa50f`c847faa0)
+        00000055`0517efe8 00007ffa`ebc2550a     win32u!NtUserGetMessage+0x14
+        00000055`0517eff0 00007ff6`dc8d95fd     USER32!GetMessageW+0x2a
+        00000055`0517f050 00007ff6`dc8deb10     Notepad+0xa95fd
+        00000055`0517f160 00007ff6`dc883b8b     Notepad+0xaeb10
+        00000055`0517f320 00007ff6`dc8a0687     Notepad+0x53b8b
+        00000055`0517f9f0 00007ff6`dc901302     Notepad+0x70687
+        00000055`0517fb60 00007ffa`eb07257d     Notepad+0xd1302
+        00000055`0517fba0 00007ffa`ebf8af08     KERNEL32!BaseThreadInitThunk+0x1d
+        00000055`0517fbd0 00000000`00000000     ntdll!RtlUserThreadStart+0x28
+
+        THREAD ffff9384444c8080  Cid 0650.0fb0  Teb: 0000005505379000 Win32Thread: 0000000000000000 WAIT: (WrQueue) UserMode Alertable
+            ffff938445022300  QueueObject
+        Not impersonating
+        DeviceMap                 ffff800905c10220
+        Owning Process            ffff938444103080       Image:         Notepad.exe
+        Attached Process          N/A            Image:         N/A
+        Wait Start TickCount      12903          Ticks: 950 (0:00:00:14.843)
+        Context Switch Count      256            IdealProcessor: 3             
+        UserTime                  00:00:00.000
+        KernelTime                00:00:00.000
+        Win32 Start Address ntdll!TppWorkerThread (0x00007ffaebf65550)
+        Stack Init ffffa50fc8c17c30 Current ffffa50fc8c17320
+        Base ffffa50fc8c18000 Limit ffffa50fc8c11000 Call 0000000000000000
+        Priority 8  BasePriority 8  IoPriority 2  PagePriority 5
+        Child-SP          RetAddr               Call Site
+        ffffa50f`c8c17360 fffff807`13e201a5     nt!KiSwapContext+0x76
+        ffffa50f`c8c174a0 fffff807`13e215c7     nt!KiSwapThread+0xaa5
+        ffffa50f`c8c175f0 fffff807`13e9acf5     nt!KiCommitThreadWait+0x137
+        ffffa50f`c8c176a0 fffff807`13e9a038     nt!KeRemoveQueueEx+0xa75
+        ffffa50f`c8c17740 fffff807`13e99779     nt!IoRemoveIoCompletion+0x98
+        ffffa50f`c8c17860 fffff807`1402a408     nt!NtWaitForWorkViaWorkerFactory+0x389
+        ffffa50f`c8c17a30 00007ffa`ebfd3d24     nt!KiSystemServiceCopyEnd+0x28 (TrapFrame @ ffffa50f`c8c17aa0)
+        00000055`056ffac8 00007ffa`ebf6583e     ntdll!NtWaitForWorkViaWorkerFactory+0x14
+        00000055`056ffad0 00007ffa`eb07257d     ntdll!TppWorkerThread+0x2ee
+        00000055`056ffdb0 00007ffa`ebf8af08     KERNEL32!BaseThreadInitThunk+0x1d
+        00000055`056ffde0 00000000`00000000     ntdll!RtlUserThreadStart+0x28
+
+        THREAD ffff93844401b080  Cid 0650.0f68  Teb: 000000550537b000 Win32Thread: 0000000000000000 WAIT: (UserRequest) UserMode Non-Alertable
+            ffff9384448240e0  SynchronizationEvent
+            ffff938444823960  SynchronizationEvent
+            ffff938444823c60  SynchronizationEvent
+            ffff9384448235e0  SynchronizationEvent
+            ffff938444823460  SynchronizationEvent
+            ffff9384448233e0  SynchronizationEvent
+        Not impersonating
+        DeviceMap                 ffff800905c10220
+        Owning Process            ffff938444103080       Image:         Notepad.exe
+        Attached Process          N/A            Image:         N/A
+        Wait Start TickCount      5774           Ticks: 8079 (0:00:02:06.234)
+        Context Switch Count      5              IdealProcessor: 5             
+        UserTime                  00:00:00.000
+        KernelTime                00:00:00.000
+        Win32 Start Address MrmCoreR!Windows::ApplicationModel::Resources::Core::LanguageChangeNotifyThreadProc (0x00007ffadad1d590)
+        Stack Init ffffa50fc8c4fc30 Current ffffa50fc8c4ecc0
+        Base ffffa50fc8c50000 Limit ffffa50fc8c49000 Call 0000000000000000
+        Priority 8  BasePriority 8  IoPriority 2  PagePriority 5
+```
 
 ## 終わりに
 

@@ -11,8 +11,9 @@ layout: default
 Windows はソースコードが公開されておらず、また、筆者が Windows について調べ始めたのがつい先月のことなので、内部の詳細な挙動についてはどうしても断言できません。
 このため、この記事は歯切れの悪い点が多数あります。
 
-- [環境](#環境)
-- [準備](#準備)
+この記事で利用した Windows のバージョンはWindows 11 バージョン 22H2 (OS ビルド 22621.4317)であり、Hyper-V 上の仮想マシンとして実行しています。
+
+- [Process monitorの準備](#process-monitorの準備)
 - [CreateProcessW の呼び出し](#createprocessw-の呼び出し)
 - [Notepad.exe プロセスの開始](#notepadexe-プロセスの開始)
 - [Notepad.exe のメモリへの読み込み](#notepadexe-のメモリへの読み込み)
@@ -21,11 +22,7 @@ Windows はソースコードが公開されておらず、また、筆者が Wi
 - [終わりに](#終わりに)
 - [参考](#参考)
 
-## 環境
-
-Hyper-V 上に Windows 11 バージョン 22H2 (OS ビルド 22621.4317)の仮想マシンを作って観察しました。
-
-## 準備
+## Process monitorの準備
 
 Process monitor を使って `cmd.exe` と `notepad.exe` の挙動を監視できる状態にします。
 具体的には，Process monitor に `cmd.exe` と `notepad.exe` の Include フィルタを設定します。

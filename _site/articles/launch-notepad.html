@@ -41,9 +41,10 @@
 <p>Windows はソースコードが公開されておらず、また、筆者が Windows について調べ始めたのがつい先月のことなので、内部の詳細な挙動についてはどうしても断言できません。
 このため、この記事は歯切れの悪い点が多数あります。</p>
 
+<p>この記事で利用した Windows のバージョンはWindows 11 バージョン 22H2 (OS ビルド 22621.4317)であり、Hyper-V 上の仮想マシンとして実行しています。</p>
+
 <ul>
-  <li><a href="#環境">環境</a></li>
-  <li><a href="#準備">準備</a></li>
+  <li><a href="#process-monitorの準備">Process monitorの準備</a></li>
   <li><a href="#createprocessw-の呼び出し">CreateProcessW の呼び出し</a></li>
   <li><a href="#notepadexe-プロセスの開始">Notepad.exe プロセスの開始</a></li>
   <li><a href="#notepadexe-のメモリへの読み込み">Notepad.exe のメモリへの読み込み</a></li>
@@ -53,11 +54,7 @@
   <li><a href="#参考">参考</a></li>
 </ul>
 
-<h2 id="環境">環境</h2>
-
-<p>Hyper-V 上に Windows 11 バージョン 22H2 (OS ビルド 22621.4317)の仮想マシンを作って観察しました。</p>
-
-<h2 id="準備">準備</h2>
+<h2 id="process-monitorの準備">Process monitorの準備</h2>
 
 <p>Process monitor を使って <code class="language-plaintext highlighter-rouge">cmd.exe</code> と <code class="language-plaintext highlighter-rouge">notepad.exe</code> の挙動を監視できる状態にします。
 具体的には，Process monitor に <code class="language-plaintext highlighter-rouge">cmd.exe</code> と <code class="language-plaintext highlighter-rouge">notepad.exe</code> の Include フィルタを設定します。

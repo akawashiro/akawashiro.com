@@ -36,11 +36,13 @@
         <h1 id="windows-でのプロセスの起動-">Windows でのプロセスの起動 <!-- omit in toc --></h1>
 <p>この記事では Windows 上で <code class="language-plaintext highlighter-rouge">cmd.exe</code> (いわゆる「コマンドプロンプト」です) から <code class="language-plaintext highlighter-rouge">notepad.exe</code> (「メモ帳」です) を起動した際に起きることを観察します。</p>
 
-<h2 id="注意-">注意 <!-- omit in toc --></h2>
+<h2 id="お断り-">お断り <!-- omit in toc --></h2>
 
-<p>Windows はソースコードが公開されていないため、内部の詳細な挙動についてはどうしても断言できません。このため、この記事は歯切れの悪い点が多数あります。</p>
+<p>Windows はソースコードが公開されておらず、また、筆者が Windows について調べ始めたのがつい先月のことなので、内部の詳細な挙動についてはどうしても断言できません。
+このため、この記事は歯切れの悪い点が多数あります。</p>
 
 <ul>
+  <li><a href="#環境">環境</a></li>
   <li><a href="#準備">準備</a></li>
   <li><a href="#createprocessw-の呼び出し">CreateProcessW の呼び出し</a></li>
   <li><a href="#notepadexe-プロセスの開始">Notepad.exe プロセスの開始</a></li>
@@ -50,6 +52,10 @@
   <li><a href="#終わりに">終わりに</a></li>
   <li><a href="#参考">参考</a></li>
 </ul>
+
+<h2 id="環境">環境</h2>
+
+<p>Hyper-V 上に Windows 11 バージョン 22H2 (OS ビルド 22621.4317)の仮想マシンを作って観察しました。</p>
 
 <h2 id="準備">準備</h2>
 
@@ -471,7 +477,9 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 <h2 id="カーネルデバッガでプロセスを観察する">カーネルデバッガでプロセスを観察する</h2>
 
 <p>カーネルデバッガを接続すると起動したプロセスを観察することができます。
-<code class="language-plaintext highlighter-rouge">Notepad.exe</code> のプロセスを観察した様子が以下です。
+カーネルデバッガの使い方については『インサイド Windows』もしくは、私の書いた<a href="https://akawashiro.com/memos/reading-inside-windows">インサイド Windows 読書メモ</a>を参照してください。</p>
+
+<p><code class="language-plaintext highlighter-rouge">Notepad.exe</code> のプロセスを観察した様子が以下です。
 ここで観察しているプロセスは、先程の Process monitor で観察しているものとは異なる点に注意してください。
 <code class="language-plaintext highlighter-rouge">Cid: 0650</code> というのがプロセス ID です。</p>
 

@@ -6,10 +6,12 @@ layout: default
 # Windows でのプロセスの起動 <!-- omit in toc -->
 この記事では Windows 上で `cmd.exe` (いわゆる「コマンドプロンプト」です) から `notepad.exe` (「メモ帳」です) を起動した際に起きることを観察します。
 
-## 注意 <!-- omit in toc -->
+## お断り <!-- omit in toc -->
 
-Windows はソースコードが公開されていないため、内部の詳細な挙動についてはどうしても断言できません。このため、この記事は歯切れの悪い点が多数あります。
+Windows はソースコードが公開されておらず、また、筆者が Windows について調べ始めたのがつい先月のことなので、内部の詳細な挙動についてはどうしても断言できません。
+このため、この記事は歯切れの悪い点が多数あります。
 
+- [環境](#環境)
 - [準備](#準備)
 - [CreateProcessW の呼び出し](#createprocessw-の呼び出し)
 - [Notepad.exe プロセスの開始](#notepadexe-プロセスの開始)
@@ -19,6 +21,9 @@ Windows はソースコードが公開されていないため、内部の詳細
 - [終わりに](#終わりに)
 - [参考](#参考)
 
+## 環境
+
+Hyper-V 上に Windows 11 バージョン 22H2 (OS ビルド 22621.4317)の仮想マシンを作って観察しました。
 
 ## 準備
 
@@ -445,6 +450,8 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 ## カーネルデバッガでプロセスを観察する
 
 カーネルデバッガを接続すると起動したプロセスを観察することができます。
+カーネルデバッガの使い方については『インサイド Windows』もしくは、私の書いた[インサイド Windows 読書メモ](https://akawashiro.com/memos/reading-inside-windows)を参照してください。
+
 `Notepad.exe` のプロセスを観察した様子が以下です。
 ここで観察しているプロセスは、先程の Process monitor で観察しているものとは異なる点に注意してください。
 `Cid: 0650` というのがプロセス ID です。

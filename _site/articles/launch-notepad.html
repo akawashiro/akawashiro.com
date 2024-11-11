@@ -101,7 +101,9 @@
 <p><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a> とは新しいプロセスとそのプライマリ スレッドを作成する Win32 API の一つです。
 選択しているイベントの直後に、<code class="language-plaintext highlighter-rouge">Process Start</code>と<code class="language-plaintext highlighter-rouge">Thread Create</code>の文字列が見えますが、これらがそれぞれ、新しいプロセスとそのプライマリスレッドに対応しているように見えます。</p>
 
-<p><a href="https://j00ru.vexillium.org/syscalls/nt/64/">NtCreateUserProcess</a> とは Windows の system call の一つであり、<a href="https://j00ru.vexillium.org/syscalls/nt/64/">https://j00ru.vexillium.org/syscalls/nt/64/</a> で実際に system call の番号を調べることができます。Linux ユーザに向けて特筆すべきなのは、この番号が Windows のバージョンで変化する点です。これは静的リンクしたバイナリの互換性が Windows のバージョンをまたいで保たれないことを意味するはずです。</p>
+<p><a href="https://j00ru.vexillium.org/syscalls/nt/64/">NtCreateUserProcess</a> とは Windows の system call の一つであり、<a href="https://j00ru.vexillium.org/syscalls/nt/64/">https://j00ru.vexillium.org/syscalls/nt/64/</a> で実際に system call の番号を調べることができます。
+興味深いのはこの番号が Windows のバージョンで変化する点です。
+これは静的リンクしたバイナリの互換性が Windows のバージョンをまたいで保たれないことを意味するはずです。</p>
 
 <p>興味深いことに、ユーザ空間からカーネル空間に遷移する際に <code class="language-plaintext highlighter-rouge">3	ntoskrnl.exe	setjmpex + 0x90d8	0xfffff80164c2a408	C:\Windows\system32\ntoskrnl.exe</code> を経由しており、<code class="language-plaintext highlighter-rouge">setjmpex</code> が呼び出されていることがわかります。
 この <code class="language-plaintext highlighter-rouge">setjmpex</code> を呼び出す理由はわかっていませんが、カーネル内で処理が失敗した場合に <code class="language-plaintext highlighter-rouge">longjmp</code> で戻ることができるようにするためであろうと推測しています。</p>
@@ -177,8 +179,7 @@ Environment:
 
 <h3 id="process-タブ-">Process タブ <!-- omit in toc --></h3>
 
-<p>Process タブには PID などのほかに Auth ID という見慣れない情報が表示されています。
-これは TODO です。
+<p>Process タブには PID や環境変数、カレントディレクトリなどのそのプロセス固有の情報が表示されています。
 また、<code class="language-plaintext highlighter-rouge">Modules</code> という項目があり、プロセス内にロードされている <code class="language-plaintext highlighter-rouge">.exe</code> や <code class="language-plaintext highlighter-rouge">.dll</code> の一覧があります。
 この時点では何も読み込まれていないため空となっています。</p>
 
@@ -260,7 +261,7 @@ Notepad.exe	0x7ff6cec10000	0x1aa000	C:\Program Files\WindowsApps\Microsoft.Windo
 非常に長いので折りたたんでおきますが、<code class="language-plaintext highlighter-rouge">ntdll.dll</code>、<code class="language-plaintext highlighter-rouge">kernel32.dll</code>、<code class="language-plaintext highlighter-rouge">KernelBase.dll</code> などの基本的なものからメモリ上に読み込まれていくようです。
 更に憶測を書くと、最初に<code class="language-plaintext highlighter-rouge">ntdll.dll</code>を読み込んでいくことから、依存関係の葉になる DLL から読み込んでいくと考えられます。</p>
 
-<details>
+<details><summary>Process monitor で Load Image のみを CSV として保存したもの</summary>
 
 ```
 "Time of Day","Process Name","PID","Operation","Path","Result","Detail"

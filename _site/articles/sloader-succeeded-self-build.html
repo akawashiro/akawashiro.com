@@ -60,7 +60,7 @@
 
 <ul>
   <li>Linux カーネルが直接、バイナリファイルをメモリ空間にロードする。</li>
-  <li>バイナリが指定したローダ<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>がバイナリファイルをメモリ空間にロードする。</li>
+  <li>バイナリが指定したローダ<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>がバイナリファイルをメモリ空間にロードする。</li>
 </ul>
 
 <p>なお、詳細は Linux カーネルの<a href="https://github.com/akawashiro/linux/blob/830b3c68c1fb1e9176028d02ef86f3cf76aa2476/fs/binfmt_elf.c#L1249-L1280">fs/binfmt_elf.c#L1249-L1280</a>付近を参照してください。</p>
@@ -152,7 +152,7 @@ thread_local unsigned char sloader_dummy_to_secure_tls_space[TLS_SPACE_FOR_LOADE
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>ローダはダイナミックリンカと呼ばれることもありますが、この記事では「ローダ」で統一します。 <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

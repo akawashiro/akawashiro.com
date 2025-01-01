@@ -51,7 +51,7 @@
 
 <h2 id="fuse">FUSE</h2>
 
-<p>このような問題を解決する一つの方法が<a href="https://www.kernel.org/doc/html/next/filesystems/fuse.html">FUSE</a>です。<a href="https://www.kernel.org/doc/html/next/filesystems/fuse.html">FUSE</a>とは Filesystem in Userspace の略であり、<a href="https://github.com/libfuse/libfuse">Linux</a>、<a href="https://osxfuse.github.io/">Mac OS</a>、Windows<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>で利用できる技術です。</p>
+<p>このような問題を解決する一つの方法が<a href="https://www.kernel.org/doc/html/next/filesystems/fuse.html">FUSE</a>です。<a href="https://www.kernel.org/doc/html/next/filesystems/fuse.html">FUSE</a>とは Filesystem in Userspace の略であり、<a href="https://github.com/libfuse/libfuse">Linux</a>、<a href="https://osxfuse.github.io/">Mac OS</a>、Windows<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>で利用できる技術です。</p>
 
 <p><a href="https://www.kernel.org/doc/html/next/filesystems/fuse.html">FUSE</a>を使うとファイルシステムをユーザ空間内に実装できます。このファイルシステムの実装を自由に書くことができるため、例えば<code class="language-plaintext highlighter-rouge">open</code>システムコールを AWS S3 の<a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html">GetObject API</a>に結び付けることで、ファイルを開く操作を自動的に S3 のオブジェクトを取得する操作に変換することができます。</p>
 
@@ -204,7 +204,7 @@ Benchmark 1: find /home/akira/ghq/github.com/akawashiro/ros3fs/build_benchmark/m
 <p>この記事に誤りがあった場合は<a href="https://twitter.com/a_kawashiro">Twitter</a>、<a href="https://mstdn.jp/@a_kawashiro">Mastodon</a>等で連絡をください。修正します。その他の連絡先は <a href="https://akawashiro.com/">https://akawashiro.com/</a> にあります。</p>
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Windows で FUSEファイルシステム を利用するのはあまり一般的ではないようです。<a href="https://github.com/winfsp/winfsp">WinFsp</a>がありますが使ったことはありません。 <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

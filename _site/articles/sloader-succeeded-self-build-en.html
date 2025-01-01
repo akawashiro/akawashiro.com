@@ -25,7 +25,7 @@
 
 <ul>
   <li>The Linux kernel directly loads the binary file into memory space.</li>
-  <li>The loader<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> specified by the binary file loads it into memory space.</li>
+  <li>The loader<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> specified by the binary file loads it into memory space.</li>
 </ul>
 
 <p>You can look at the <code class="language-plaintext highlighter-rouge">PT_INTERP</code> segment of the binary file with <code class="language-plaintext highlighter-rouge">readelf -l</code> to see in which way the binary file is loaded . In most cases, it will say <code class="language-plaintext highlighter-rouge">Requesting program interpreter: /lib64/ld-linux-x86-64.so.2</code>, which means <code class="language-plaintext highlighter-rouge">/lib64/ld-linux-x86-64.so.2</code> will load the binary file into memory space.</p>
@@ -113,7 +113,7 @@ thread_local unsigned char sloader_dummy_to_secure_tls_space[TLS_SPACE_FOR_LOADE
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>A loader is sometimes called a “dynamic linker”, but this article is unified by “loader”. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

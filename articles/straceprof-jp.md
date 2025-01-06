@@ -45,6 +45,37 @@ $ straceprof \
 Github Action などで `perf` や `perfetto` などのちゃんとしたプロファイラを設定するのはそれ自体が骨の折れる作業ですし、必要な権限がなくそもそも動かすのが不可能である可能性もあります。
 また、ビルド環境を完全に固定するために Docker などのコンテナ環境を利用している場合は、プロファイラのセットアップがさらに面倒になります。
 
+## straceprof
+
+_straceprof_ はとにかくお手軽にビルドプロセス全体のプロファイルをとるためのツールです。
+プロファイルをとるのに必要なのは `strace` コマンドだけです。
+ほとんどすべての Linux ディストリビューションで簡単にインストールすることができます。
+
+まず、`strace` コマンドをつけてビルドしてプロファイルを取ります。
+```
+$ strace \
+    --trace=execve,execveat,exit,exit_group \
+    --follow-forks \
+    --string-limit=1000 \
+    --absolute-timestamps=format:unix,precision:us \
+    --output=straceprof.log \
+    <command to profile>
+```
+
+次に、この出力を `straceprof` コマンドに渡すとプロファイル結果が可視化されます。簡単ですね!
+
+```
+$ straceprof \
+    --log=straceprof.log \
+    --output=straceprof.png
+```
+
+<img src="./linux_build.png">
+
+## 仕組み
+
+`strace` は
+
 ## 使用例
 
 ### Linux カーネルのビルド

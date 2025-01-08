@@ -74,16 +74,21 @@ $ straceprof \
 
 ## 仕組み
 
-`strace` は
+`strace` 
+
+`straceprof` は `strace` の出力をパースすることで
 
 ## 使用例
 
-### Linux カーネルのビルド
-<img src="./linux_build.png">
-
 ### Julia のビルド
+
+[Julia](https://github.com/JuliaLang/julia) というプログラミング言語をビルドしたプロファイラ結果がこちらです。
+
 <img src="./julia_build.png">
 
-### PyTorch のビルド
+### Linux カーネルのビルド
 
-<img src="./pytorch_build.png">
+僕がよく使っている Linux カーネルをビルドする[スクリプト](https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh) のプロファイル結果がこちらです。
+C言語のコンパイルが大量に行われていることがわかります。
+
+<img src="./linux_build.png">

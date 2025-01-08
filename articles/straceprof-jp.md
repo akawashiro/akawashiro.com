@@ -1,7 +1,7 @@
 # straceprof
 
 ## 三行まとめ
-- _straceprof_ は `strace` コマンドを利用してマルチプロセスで動くプログラムをプロファイルするためのソフトウェアです。
+- _straceprof_ は `strace` コマンドを利用してLinxu 上のマルチプロセスで動くプログラムをプロファイルするためのソフトウェアです。
 - _straceprof_ は `strace` コマンドが使えるところならどこでも使うことができます。
 - _straceprof_ は特にソフトウェアのビルドのプロファイルを念頭に置いて書かれています。
 
@@ -74,21 +74,29 @@ $ straceprof \
 
 ## 仕組み
 
-`strace` 
+[strace](https://strace.io/) というコマンドがあります。
+このコマンドを利用すると、プロセスが発行する全てのシステムコールを監視し、ファイルに記録することができます。
 
-`straceprof` は `strace` の出力をパースすることで
+また、Linux では多くのプロセスが [execve(2)](https://man7.org/linux/man-pages/man2/execve.2.html)システムコールで開始され、[exit_group(2)](https://man7.org/linux/man-pages/man2/exit_group.2.html)で終了します[^execve-exit_group]。
+このため、`strace`で各プロセスの`execve(2)`と`exit_group(2)`の時間を記録すれば、そのプロセスの所要時間を割り出すことができます。
+
+[^execve-exit_group]: そうでない場合もありますが、ビルド中に起動されるほとんどのプロセスについてはこう思って問題ありません。
+
+`straceprof` は `strace` の出力をパースすることで各プロセスの所要時間を割り出し、[matplotlib](https://matplotlib.org/) を使って画像を出力します。
+画像の縦方向には意味がなく、可能な限り画像サイズが小さくなる順番にプロセスが並んでいます。
 
 ## 使用例
 
 ### Julia のビルド
 
 [Julia](https://github.com/JuliaLang/julia) というプログラミング言語をビルドしたプロファイラ結果がこちらです。
+ビルドを開始してから140秒から320秒の間、`compiler.jl`と`sys.jl`の処理を行っており、これが全体のボトルネックであり、この処理を高速化できれば、ビルド時間を短縮することができます。
 
 <img src="./julia_build.png">
 
 ### Linux カーネルのビルド
 
 僕がよく使っている Linux カーネルをビルドする[スクリプト](https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh) のプロファイル結果がこちらです。
-C言語のコンパイルが大量に行われていることがわかります。
+C言語のコンパイルが大量に行われています。
 
 <img src="./linux_build.png">

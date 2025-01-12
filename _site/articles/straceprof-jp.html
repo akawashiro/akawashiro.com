@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア | Akira Kawata</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="/articles/straceprof-jp.html" />
+<meta property="og:url" content="/articles/straceprof-jp.html" />
+<meta property="og:site_name" content="Akira Kawata" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア","url":"/articles/straceprof-jp.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Akira Kawata" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akira Kawata</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+      </nav></div>
+</header>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="straceprofとにかく簡単にビルドのプロファイルを取るためのソフトウェア">straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア</h1>
+
+<h2 id="三行まとめ">三行まとめ</h2>
+<ul>
+  <li><em>straceprof</em> は <code class="language-plaintext highlighter-rouge">strace</code> コマンドを利用して Linux 上のマルチプロセスで動くプログラムをプロファイルするためのソフトウェアです。</li>
+  <li><em>straceprof</em> は <code class="language-plaintext highlighter-rouge">strace</code> コマンドが使えるところならどこでも使うことができます。</li>
+  <li><em>straceprof</em> はソフトウェアのビルドのプロファイルを特に念頭に置いて書かれています。</li>
+</ul>
+
+<h2 id="とりあえず使ってみたい人向けのコマンド">とりあえず使ってみたい人向けのコマンド</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>strace
+<span class="nv">$ </span>pip <span class="nb">install </span>straceprof
+<span class="nv">$ </span>strace <span class="se">\</span>
+    <span class="nt">--trace</span><span class="o">=</span>execve,execveat,exit,exit_group <span class="se">\</span>
+    <span class="nt">--follow-forks</span> <span class="se">\</span>
+    <span class="nt">--string-limit</span><span class="o">=</span>1000 <span class="se">\</span>
+    <span class="nt">--absolute-timestamps</span><span class="o">=</span>format:unix,precision:us <span class="se">\</span>
+    <span class="nt">--output</span><span class="o">=</span>straceprof.log <span class="se">\</span>
+    &lt;<span class="nb">command </span>to profile&gt;
+<span class="nv">$ </span>straceprof <span class="se">\</span>
+    <span class="nt">--log</span><span class="o">=</span>straceprof.log <span class="se">\</span>
+    <span class="nt">--output</span><span class="o">=</span>straceprof.png
+</code></pre></div></div>
+
+<p><img src="./linux_build.png" /></p>
+
+<!-- 動機 -->
+<h2 id="ソフトウェアのビルドのプロファイル">ソフトウェアのビルドのプロファイル</h2>
+
+<p>仕事でもプライベートでも少し規模の大きいソフトウェアをビルドする機会がかなりの頻度であります。
+例えば、ビルドしているのは、<a href="https://github.com/torvalds/linux">Linux カーネル</a>や <a href="https://github.com/JuliaLang/julia">Julia</a>、<a href="https://github.com/pytorch/pytorch">PyTorch</a>、<a href="https://sourceware.org/glibc/">glibc</a> といったソフトウェアです。
+これらのソフトウェアは僕のPC<sup id="fnref:mypc"><a href="#fn:mypc" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>でフルビルドに5分から30分程度かかります。
+差分ビルドであってもフルビルドほどではないにせよそれなりの時間がかかります。</p>
+
+<p>このビルド時間は少し変更を入れて動作確認するたびにかかるので、作業効率を上げるためにはこれを縮めることが大変重要です。
+ビルド時間を短縮するというのは一種のパフォーマンスチューニングです。
+このため、ビルドプロセス全体のプロファイルがとり、ボトルネックを特定する必要があります。</p>
+
+<p>ここで、ビルドプロセスのプロファイルをとるのが難しい場合が多い、という問題があります。
+ソフトウェアのビルドに使われているツールは多様で、しかもそれらがシェルスクリプトや Dockerfile などで組み合わされていることがあります。
+個々の <code class="language-plaintext highlighter-rouge">CMake</code> や <code class="language-plaintext highlighter-rouge">cargo</code> といったツールにはプロファイラがあるかもしれませんが、結局知りたいのはビルドプロセス全体の所要時間なので全体をまとめてプロファイルできる必要があります。</p>
+
+<p>さらに、ソフトウェアがビルドされる環境は必ずしもプロファイルしやすい場所ではありません。
+よくあるのは CI でビルドしている場合でしょう。
+Github Action 上などで <code class="language-plaintext highlighter-rouge">perf</code> や <code class="language-plaintext highlighter-rouge">perfetto</code> などのリッチなプロファイラを設定するのはそれ自体が骨の折れる作業ですし、必要な権限がなくそもそも動かすのが不可能である可能性もあります。
+また、ビルド環境を完全に固定するために Docker などのコンテナ環境を利用している場合は、プロファイラのセットアップがさらに面倒になります。</p>
+
+<h2 id="straceprof">straceprof</h2>
+
+<p><em>straceprof</em> はとにかくお手軽にビルドプロセス全体のプロファイルをとるためのツールです。
+プロファイルをとるのに必要なのは <code class="language-plaintext highlighter-rouge">strace</code> コマンドだけです。
+このコマンドはほとんどすべての Linux ディストリビューションで簡単にインストールすることができます。</p>
+
+<p>まず、<code class="language-plaintext highlighter-rouge">strace</code> コマンドをつけてビルドしてプロファイルを取ります。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ strace \
+    --trace=execve,execveat,exit,exit_group \
+    --follow-forks \
+    --string-limit=1000 \
+    --absolute-timestamps=format:unix,precision:us \
+    --output=straceprof.log \
+    &lt;command to profile&gt;
+</code></pre></div></div>
+
+<p>次に、この出力を <code class="language-plaintext highlighter-rouge">straceprof</code> コマンドに渡すとプロファイル結果が可視化されます。簡単ですね!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ straceprof \
+    --log=straceprof.log \
+    --output=straceprof.png
+</code></pre></div></div>
+
+<p><img src="./linux_build.png" /></p>
+
+<h2 id="仕組み">仕組み</h2>
+
+<p><a href="https://strace.io/">strace</a> というコマンドがあります。
+このコマンドを利用すると、プロセスが発行する全てのシステムコールを監視し、ファイルに記録することができます。</p>
+
+<p>また、Linux では多くのプロセスが <a href="https://man7.org/linux/man-pages/man2/execve.2.html">execve(2)</a>システムコールで開始され、<a href="https://man7.org/linux/man-pages/man2/exit_group.2.html">exit_group(2)</a>で終了します<sup id="fnref:execve-exit_group"><a href="#fn:execve-exit_group" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>。
+このため、<code class="language-plaintext highlighter-rouge">strace</code>で各プロセスの<code class="language-plaintext highlighter-rouge">execve(2)</code>と<code class="language-plaintext highlighter-rouge">exit_group(2)</code>の時間を記録すれば、そのプロセスの所要時間を割り出すことができます。</p>
+
+<p><code class="language-plaintext highlighter-rouge">straceprof</code> は <code class="language-plaintext highlighter-rouge">strace</code> の出力をパースすることで各プロセスの所要時間を割り出し、<a href="https://matplotlib.org/">matplotlib</a> を使って画像を出力します。
+画像の縦方向には意味がなく、可能な限り画像サイズが小さくなる順番にプロセスが並んでいます。</p>
+
+<h2 id="使用例">使用例</h2>
+
+<h3 id="julia-のビルド">Julia のビルド</h3>
+
+<p><a href="https://github.com/JuliaLang/julia">Julia</a> というプログラミング言語をフルビルドしたプロファイラ結果がこちらです。
+ビルドを開始してから140秒から320秒の間、<code class="language-plaintext highlighter-rouge">compiler.jl</code>と<code class="language-plaintext highlighter-rouge">sys.jl</code>の処理を行っており、これが全体のボトルネックです。
+この処理を高速化できれば、ビルド時間を短縮することができます。</p>
+
+<p><img src="./julia_build.png" /></p>
+
+<h3 id="linux-カーネルのビルド">Linux カーネルのビルド</h3>
+
+<p>僕がよく使っている Linux カーネルをビルドする<a href="https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh">スクリプト</a> のプロファイル結果がこちらです。
+C言語のコンパイルが並列に行われており、明確なボトルネックはありません。</p>
+
+<p><img src="./linux_build.png" /></p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:mypc">
+      <p>CPU: AMD Ryzen 9 5950X、メモリ: 64 GiByte <a href="#fnref:mypc" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:execve-exit_group">
+      <p>そうでない場合もありますが、ビルド中に起動されるほとんどのプロセスはコンパイラやリンカであり、このように考えて問題ないと考えています。 <a href="#fnref:execve-exit_group" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+</footer>
+</body>
+
+</html>

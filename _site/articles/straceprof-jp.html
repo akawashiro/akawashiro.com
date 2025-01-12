@@ -121,7 +121,7 @@ Github Action 上などで <code class="language-plaintext highlighter-rouge">pe
 
 <h3 id="julia-のビルド">Julia のビルド</h3>
 
-<p><a href="https://github.com/JuliaLang/julia">Julia</a> というプログラミング言語をフルビルドしたプロファイラ結果がこちらです。
+<p><a href="https://github.com/JuliaLang/julia">Julia</a> というプログラミング言語をフルビルドしたプロファイラ結果が<a href="https://akawashiro.com/articles/julia_build.png">こちら</a>です。
 ビルドを開始してから140秒から320秒の間、<code class="language-plaintext highlighter-rouge">compiler.jl</code>と<code class="language-plaintext highlighter-rouge">sys.jl</code>の処理を行っており、これが全体のボトルネックです。
 この処理を高速化できれば、ビルド時間を短縮することができます。</p>
 
@@ -129,7 +129,7 @@ Github Action 上などで <code class="language-plaintext highlighter-rouge">pe
 
 <h3 id="linux-カーネルのビルド">Linux カーネルのビルド</h3>
 
-<p>僕がよく使っている Linux カーネルをビルドする<a href="https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh">スクリプト</a> のプロファイル結果がこちらです。
+<p>僕がよく使っている Linux カーネルをビルドする<a href="https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh">スクリプト</a> のプロファイル結果が<a href="https://akawashiro.com/articles/linux_build.png">こちら</a>です。
 C言語のコンパイルが並列に行われており、明確なボトルネックはありません。</p>
 
 <p><img src="./linux_build.png" /></p>

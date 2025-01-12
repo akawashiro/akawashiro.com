@@ -96,7 +96,7 @@ $ straceprof \
 
 ### Julia のビルド
 
-[Julia](https://github.com/JuliaLang/julia) というプログラミング言語をフルビルドしたプロファイラ結果がこちらです。
+[Julia](https://github.com/JuliaLang/julia) というプログラミング言語をフルビルドしたプロファイラ結果が[こちら](https://akawashiro.com/articles/julia_build.png)です。
 ビルドを開始してから140秒から320秒の間、`compiler.jl`と`sys.jl`の処理を行っており、これが全体のボトルネックです。
 この処理を高速化できれば、ビルド時間を短縮することができます。
 
@@ -104,7 +104,7 @@ $ straceprof \
 
 ### Linux カーネルのビルド
 
-僕がよく使っている Linux カーネルをビルドする[スクリプト](https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh) のプロファイル結果がこちらです。
+僕がよく使っている Linux カーネルをビルドする[スクリプト](https://github.com/akawashiro/public-tools/blob/master/build-install-linux.sh) のプロファイル結果が[こちら](https://akawashiro.com/articles/linux_build.png)です。
 C言語のコンパイルが並列に行われており、明確なボトルネックはありません。
 
 <img src="./linux_build.png">

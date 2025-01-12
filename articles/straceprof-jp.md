@@ -6,9 +6,9 @@ layout: default
 # straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア
 
 ## 三行まとめ
-- _straceprof_ は `strace` コマンドを利用して Linux 上のマルチプロセスで動くプログラムをプロファイルするためのソフトウェアです。
-- _straceprof_ は `strace` コマンドが使えるところならどこでも使うことができます。
-- _straceprof_ はソフトウェアのビルドのプロファイルを特に念頭に置いて書かれています。
+- [_straceprof_](https://github.com/akawashiro/straceprof) は `strace` コマンドを利用して Linux 上のマルチプロセスで動くプログラムをプロファイルするためのソフトウェアです。
+- [_straceprof_](https://github.com/akawashiro/straceprof) は `strace` コマンドが使えるところならどこでも使うことができます。
+- [_straceprof_](https://github.com/akawashiro/straceprof) はソフトウェアのビルドのプロファイルを特に念頭に置いて書かれています。
 
 ## とりあえず使ってみたい人向けのコマンド
 
@@ -108,3 +108,7 @@ $ straceprof \
 C言語のコンパイルが並列に行われており、明確なボトルネックはありません。
 
 <img src="./linux_build.png">
+
+## お願い
+
+[https://github.com/akawashiro/straceprof](https://github.com/akawashiro/straceprof) にスターをつけてください。

@@ -146,3 +146,4 @@ layout: default
 ## Memos
 - [How to deploy this site](./memos/how-to-deploy-this-site.html)
 - [syscall 命令がユーザ空間からカーネル空間にジャンプする仕組み](./memos/how-syscall-jump-from-user-code-to-kernel-code.html)
+- [VM の実装と性能](./memos/why-vm-slow.html)

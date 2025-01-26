@@ -109,6 +109,32 @@ C言語のコンパイルが並列に行われており、明確なボトルネ�
 
 <img src="./linux_build.png">
 
+### コンテナイメージのビルド
+
+コンテナイメージのビルドにはしばしば時間がかかります。
+`straceprof` を使えばそのビルドをプロファイルすることもできます。
+なお、コンテナイメージビルドのプロファイルをする際は、`docker`ではなく`podman`を利用してください。
+`podman` コマンドはイメージをビルドする際に[デーモンを利用しない](https://www.redhat.com/en/topics/containers/what-is-podman)ため、`strace` を使ってビルド時に起動されるすべてのプロセスを補足することができます。
+
+```
+$ cat Dockerfile
+FROM ubuntu:24.04
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
+$ strace \
+    --trace=execve,execveat,exit,exit_group \
+    --follow-forks \
+    --string-limit=1000 \
+    --absolute-timestamps=format:unix,precision:us \
+    --output=straceprof.log \
+    podman build . --no-cache
+$ straceprof \
+    --log=straceprof.log \
+    --output=straceprof.png
+```
+
+<img src="./podman-build-profile.png">
+
 ## お願い
 
 [https://github.com/akawashiro/straceprof](https://github.com/akawashiro/straceprof) にスターをつけてください。

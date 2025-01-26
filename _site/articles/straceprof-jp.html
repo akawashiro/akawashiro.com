@@ -134,6 +134,31 @@ C言語のコンパイルが並列に行われており、明確なボトルネ�
 
 <p><img src="./linux_build.png" /></p>
 
+<h3 id="コンテナイメージのビルド">コンテナイメージのビルド</h3>
+
+<p>コンテナイメージのビルドにはしばしば時間がかかります。
+<code class="language-plaintext highlighter-rouge">straceprof</code> を使えばそのビルドをプロファイルすることもできます。
+なお、コンテナイメージビルドのプロファイルをする際は、<code class="language-plaintext highlighter-rouge">docker</code>ではなく<code class="language-plaintext highlighter-rouge">podman</code>を利用してください。
+<code class="language-plaintext highlighter-rouge">podman</code> コマンドはイメージをビルドする際に<a href="https://www.redhat.com/en/topics/containers/what-is-podman">デーモンを利用しない</a>ため、<code class="language-plaintext highlighter-rouge">strace</code> を使ってビルド時に起動されるすべてのプロセスを補足することができます。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat Dockerfile
+FROM ubuntu:24.04
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
+$ strace \
+    --trace=execve,execveat,exit,exit_group \
+    --follow-forks \
+    --string-limit=1000 \
+    --absolute-timestamps=format:unix,precision:us \
+    --output=straceprof.log \
+    podman build . --no-cache
+$ straceprof \
+    --log=straceprof.log \
+    --output=straceprof.png
+</code></pre></div></div>
+
+<p><img src="./podman-build-profile.png" /></p>
+
 <h2 id="お願い">お願い</h2>
 
 <p><a href="https://github.com/akawashiro/straceprof">https://github.com/akawashiro/straceprof</a> にスターをつけてください。</p>

@@ -120,7 +120,7 @@ Therefore, by recording the time of the <code class="language-plaintext highligh
 
 <p>The profiler result of a full build of the <a href="https://github.com/JuliaLang/julia">Julia</a> programming language can be found <a href="https://akawashiro.com/articles/julia_build.png">here</a>.
 Between 140 and 320 seconds after the build starts, the processes <code class="language-plaintext highlighter-rouge">compiler.jl</code> and <code class="language-plaintext highlighter-rouge">sys.jl</code> are running, and this is the main bottleneck in the build.
-By optimizing these processes, we can reduce the build time.</p>
+By optimizing these processes, we can reduce the build time. (But optimizing them is very difficult or impossible.)</p>
 
 <p><img src="./julia_build.png" /></p>
 

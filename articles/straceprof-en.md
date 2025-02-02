@@ -95,7 +95,7 @@ _straceprof_ parses the output from `strace` to determine the duration of each p
 
 The profiler result of a full build of the [Julia](https://github.com/JuliaLang/julia) programming language can be found [here](https://akawashiro.com/articles/julia_build.png).
 Between 140 and 320 seconds after the build starts, the processes `compiler.jl` and `sys.jl` are running, and this is the main bottleneck in the build.
-By optimizing these processes, we can reduce the build time.
+By optimizing these processes, we can reduce the build time. (But optimizing them is very difficult or impossible.)
 
 <img src="./julia_build.png">
 

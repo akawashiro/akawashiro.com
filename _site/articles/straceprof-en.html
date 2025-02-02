@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>straceprof — A Software for Easily Profiling Build Processes | Akira Kawata</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="straceprof — A Software for Easily Profiling Build Processes" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="/articles/straceprof-en.html" />
+<meta property="og:url" content="/articles/straceprof-en.html" />
+<meta property="og:site_name" content="Akira Kawata" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="straceprof — A Software for Easily Profiling Build Processes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"straceprof — A Software for Easily Profiling Build Processes","url":"/articles/straceprof-en.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Akira Kawata" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akira Kawata</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+      </nav></div>
+</header>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="straceprof--a-software-for-easily-profiling-build-processes">straceprof — A Software for Easily Profiling Build Processes</h1>
+
+<h2 id="summary-in-three-lines">Summary in Three Lines</h2>
+<ul>
+  <li><a href="https://github.com/akawashiro/straceprof"><em>straceprof</em></a> is a software that uses the <code class="language-plaintext highlighter-rouge">strace</code> command to profile programs running as multi-processes on Linux.</li>
+  <li><a href="https://github.com/akawashiro/straceprof"><em>straceprof</em></a> can be used anywhere the <code class="language-plaintext highlighter-rouge">strace</code> command is available.</li>
+  <li><a href="https://github.com/akawashiro/straceprof"><em>straceprof</em></a> is specifically written with profiling software builds in mind.</li>
+</ul>
+
+<h2 id="for-those-who-want-to-try-it-quickly">For Those Who Want to Try It Quickly</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>strace
+<span class="nv">$ </span>pip <span class="nb">install </span>straceprof
+<span class="nv">$ </span>strace <span class="se">\</span>
+    <span class="nt">--trace</span><span class="o">=</span>execve,execveat,exit,exit_group <span class="se">\</span>
+    <span class="nt">--follow-forks</span> <span class="se">\</span>
+    <span class="nt">--string-limit</span><span class="o">=</span>1000 <span class="se">\</span>
+    <span class="nt">--absolute-timestamps</span><span class="o">=</span>format:unix,precision:us <span class="se">\</span>
+    <span class="nt">--output</span><span class="o">=</span>straceprof.log <span class="se">\</span>
+    &lt;<span class="nb">command </span>to profile&gt;
+<span class="nv">$ </span>straceprof <span class="se">\</span>
+    <span class="nt">--log</span><span class="o">=</span>straceprof.log <span class="se">\</span>
+    <span class="nt">--output</span><span class="o">=</span>straceprof.png
+</code></pre></div></div>
+
+<p><img src="./linux_build.png" /></p>
+
+<!-- Motivation -->
+<h2 id="profiling-software-builds">Profiling Software Builds</h2>
+
+<p>In both work and personal projects, I frequently find myself building larger software. For example, I often build <a href="https://github.com/torvalds/linux">the Linux kernel</a>, <a href="https://github.com/JuliaLang/julia">Julia</a>, <a href="https://github.com/pytorch/pytorch">PyTorch</a>, and <a href="https://sourceware.org/glibc/">glibc</a>.
+Building these projects takes about 5 to 30 minutes for a full build on my PC<sup id="fnref:mypc"><a href="#fn:mypc" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>.
+Even with incremental builds, they still take a considerable amount of time, though not as much as a full build.</p>
+
+<p>This build time adds up every time I make changes and need to verify the result, so reducing it is critical for improving work efficiency.
+Reducing build time is a form of performance tuning.
+Therefore, profiling the entire build process and identifying bottlenecks is necessary.</p>
+
+<p>However, profiling the build process can be difficult. The tools used in the software build are diverse and may be combined in shell scripts or Dockerfiles.
+While individual tools like <code class="language-plaintext highlighter-rouge">CMake</code> or <code class="language-plaintext highlighter-rouge">cargo</code> may have their own profilers, what I really want to know is the total time taken for the entire build process, so I need a way to profile the whole process.</p>
+
+<p>Furthermore, the environment in which software is built is not always conducive to profiling.
+A common case is when builds are done in CI environments.
+Setting up rich profilers like <code class="language-plaintext highlighter-rouge">perf</code> or <code class="language-plaintext highlighter-rouge">perfetto</code> on a platform like Github Actions is challenging and may be impossible without the necessary permissions.
+Additionally, when using containerized environments like Docker to fully isolate the build environment, setting up a profiler becomes even more cumbersome.</p>
+
+<h2 id="straceprof">straceprof</h2>
+
+<p><em>straceprof</em> is a tool designed to easily profile the entire build process.
+All you need to profile is the <code class="language-plaintext highlighter-rouge">strace</code> command.
+This command can be easily installed on almost all Linux distributions.</p>
+
+<p>First, use the <code class="language-plaintext highlighter-rouge">strace</code> command to build and profile the process:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ strace \
+    --trace=execve,execveat,exit,exit_group \
+    --follow-forks \
+    --string-limit=1000 \
+    --absolute-timestamps=format:unix,precision:us \
+    --output=straceprof.log \
+    &lt;command to profile&gt;
+</code></pre></div></div>
+
+<p>Next, pass the output to the <code class="language-plaintext highlighter-rouge">straceprof</code> command to visualize the profile result. It’s that simple!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ straceprof \
+    --log=straceprof.log \
+    --output=straceprof.png
+</code></pre></div></div>
+
+<p><img src="./linux_build.png" /></p>
+
+<h2 id="how-it-works">How It Works</h2>
+
+<p>There is a command called <a href="https://strace.io/">strace</a>.
+By using this command, you can monitor all system calls made by a process and log them to a file.</p>
+
+<p>In Linux, many processes start with the <a href="https://man7.org/linux/man-pages/man2/execve.2.html">execve(2)</a> system call and end with <a href="https://man7.org/linux/man-pages/man2/exit_group.2.html">exit_group(2)</a><sup id="fnref:execve-exit_group"><a href="#fn:execve-exit_group" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>.
+Therefore, by recording the time of the <code class="language-plaintext highlighter-rouge">execve(2)</code> and <code class="language-plaintext highlighter-rouge">exit_group(2)</code> system calls for each process using <code class="language-plaintext highlighter-rouge">strace</code>, we can calculate the duration of that process.</p>
+
+<p><em>straceprof</em> parses the output from <code class="language-plaintext highlighter-rouge">strace</code> to determine the duration of each process and uses <a href="https://matplotlib.org/">matplotlib</a> to generate a visual representation. The vertical axis of the image is meaningless, and the processes are arranged in order to minimize the image size.</p>
+
+<h2 id="example-usage">Example Usage</h2>
+
+<h3 id="building-julia">Building Julia</h3>
+
+<p>The profiler result of a full build of the <a href="https://github.com/JuliaLang/julia">Julia</a> programming language can be found <a href="https://akawashiro.com/articles/julia_build.png">here</a>.
+Between 140 and 320 seconds after the build starts, the processes <code class="language-plaintext highlighter-rouge">compiler.jl</code> and <code class="language-plaintext highlighter-rouge">sys.jl</code> are running, and this is the main bottleneck in the build.
+By optimizing these processes, we can reduce the build time.</p>
+
+<p><img src="./julia_build.png" /></p>
+
+<h3 id="building-the-linux-kernel">Building the Linux Kernel</h3>
+
+<p>The profiler result of the script I often use to build the Linux kernel can be found <a href="https://akawashiro.com/articles/linux_build.png">here</a>.
+C language compilation is done in parallel, and there is no clear bottleneck.</p>
+
+<p><img src="./linux_build.png" /></p>
+
+<h3 id="building-a-container-image">Building a Container Image</h3>
+
+<p>Building container images can often take a long time.
+With <code class="language-plaintext highlighter-rouge">straceprof</code>, you can profile this build process as well.
+Note that when profiling a container image build, use <code class="language-plaintext highlighter-rouge">podman</code> instead of <code class="language-plaintext highlighter-rouge">docker</code>.
+The <code class="language-plaintext highlighter-rouge">podman</code> command does not rely on a daemon when building images, allowing <code class="language-plaintext highlighter-rouge">strace</code> to capture all the processes launched during the build.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat Dockerfile
+FROM ubuntu:24.04
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
+$ strace \
+    --trace=execve,execveat,exit,exit_group \
+    --follow-forks \
+    --string-limit=1000 \
+    --absolute-timestamps=format:unix,precision:us \
+    --output=straceprof.log \
+    podman build . --no-cache
+$ straceprof \
+    --log=straceprof.log \
+    --output=straceprof.png
+</code></pre></div></div>
+
+<p><img src="./podman-build-profile.png" /></p>
+
+<h2 id="a-request">A Request</h2>
+
+<p>Please give a star to <a href="https://github.com/akawashiro/straceprof">https://github.com/akawashiro/straceprof</a>.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:mypc">
+      <p>CPU: AMD Ryzen 9 5950X, Memory: 64 GiByte <a href="#fnref:mypc" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:execve-exit_group">
+      <p>While not all processes behave this way, most processes launched during a build (such as compilers and linkers) follow this pattern. <a href="#fnref:execve-exit_group" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+</footer>
+</body>
+
+</html>

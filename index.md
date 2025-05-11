@@ -52,7 +52,8 @@ layout: default
 ## Publication
 
 - [Kernel/VM探検隊@関西 11回目](https://kernelvm.connpass.com/event/347564/)
-  - [とにかく簡単にビルドのプロファイルを取りたい!](./slides/straceprof-js-jp.pdf)
+  - [スライド「とにかく簡単にビルドのプロファイルを取りたい!」](./slides/straceprof-js-jp.pdf)
+  - [straceprof](https://akawashiro.com/software/straceprof/)
 - [Binary Hacks Rebooted ~ Forkwell Library#68](https://forkwell.connpass.com/event/331098/)
   - [『Binary Hacks Rebooted』の紹介](./BinaryHacksRebootedIntroduction20241003.pdf)
 - [夏のプログラミング・シンポジウム 2024](https://prosym.org/sprosym2024/)

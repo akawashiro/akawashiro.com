@@ -36,6 +36,8 @@ layout: default
 
 ## Articles
 
+- [How to Use MN-Core with MLSDK](https://docs.pfcomputing.com/mncore-sdk/pfcomp/codegen/MLSDK/index.html)
+  - [Screenshot](./images/MLSDK_README.png)
 - [straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア](./articles/straceprof-jp) / [straceprof — A Software for Easily Profiling Build Processes](./articles/straceprof-en)
 - [MN-Coreランタイム – MN-Coreを動かすソフトウェア (in Japanese)](https://tech.preferred.jp/ja/blog/mncore-runtime-1/) / [MN-Core runtime – software which runs MN-Core](https://tech.preferred.jp/en/blog/mncore-runtime-1/)
 - [ros3fs - オブジェクトストレージ用の高速な読み取り専用FUSEファイルシステム (in Japanese)](./articles/ros3fs-jp.html)

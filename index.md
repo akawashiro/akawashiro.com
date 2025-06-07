@@ -13,6 +13,9 @@ layout: default
 
 <img src="profile.png" width="20%">
 
+## Curriculum Vitae
+- [Curriculum Vitae - Akira Kawata](https://docs.google.com/document/d/1gptknwFbUQNjxTXqCAgl2-f8TTiEl68gJOhXtCYUTCg/edit?tab=t.0#heading=h.gjdgxs)
+
 ## Interests
 
 - Executable and Linkable Format of Linux

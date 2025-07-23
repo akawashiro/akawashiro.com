@@ -62,7 +62,7 @@ layout: default
 - [Binary Hacks Rebooted ~ Forkwell Library#68](https://forkwell.connpass.com/event/331098/)
   - [『Binary Hacks Rebooted』の紹介](./BinaryHacksRebootedIntroduction20241003.pdf)
 - [夏のプログラミング・シンポジウム 2024](https://prosym.org/sprosym2024/)
-  - [実行ファイルのスペースにホワイトスペースを入れる](https://docs.google.com/presentation/d/1dNYOtYc7xz1GSW5NwhiZ6KXhbJnpGBLBZW5lhI8shcw/edit#slide=id.g2ff84a965c3_0_119)
+  - [実行ファイルのスペースにホワイトスペースを入れる](./slides/whitespace-in-space-jp.pdf)
 - [Kernel/VM 探検隊@東京 No16](https://kernelvm.connpass.com/event/287261/)
   - Talk on sloader
   - [Slide: 自作ローダのための libc 初期化ハック](https://akawashiro.github.io/sloader-libc-hacks.pdf)

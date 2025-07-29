@@ -9,6 +9,8 @@ layout: default
 
 ### How to build
 ```
+$ uname -a
+Linux masumi 6.14.0-27-generic #27~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Jul 22 17:38:49 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 $ git clone https://github.com/intel/lmbench.git
 $ cd lmbench
 $ git show HEAD | head -n1

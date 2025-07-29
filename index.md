@@ -154,6 +154,9 @@ layout: default
 
 ## Memos
 - [How to deploy this site](./memos/how-to-deploy-this-site.html)
-- [syscall 命令がユーザ空間からカーネル空間にジャンプする仕組み](./memos/how-syscall-jump-from-user-code-to-kernel-code.html)
+- [syscall 命令がユーザ空間からカーネル空間にジャンプする仕組み (JA)](./memos/how-syscall-jump-from-user-code-to-kernel-code.html)
 - [VM の実装と性能](./memos/why-vm-slow.html)
 - [マトロイドと最小全域木問題](./slides/matroid-and-MST.pdf)
+- [How to profile using perfetto](./memos/how-to-profile-using-perfetto.html)
+- [Linux Benchmarks](./memos/linux-benchmarks.html)
+- [インサイド Windows 読書メモ (JA)](./memos/reading-inside-windows.html)

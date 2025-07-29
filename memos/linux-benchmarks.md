@@ -29,4 +29,5 @@ index d233b37..f41d549 100755
  echo "main(int ac, char *av[]) { int i; }" > ${BASE}$$.c
 $ sudo apt install libtirpc-dev
 $ make build CPPFLAGS="-I /usr/include/tirpc" LDFLAGS="-ltirpc" -j
+$ make results
 ```

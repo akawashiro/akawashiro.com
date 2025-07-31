@@ -31,6 +31,11 @@ index d233b37..f41d549 100755
  echo "main(int ac, char *av[]) { int i; }" > ${BASE}$$.c
 $ sudo apt install libtirpc-dev
 $ make build CPPFLAGS="-I /usr/include/tirpc" LDFLAGS="-ltirpc" -j
+```
+
+<summary> Output of `make results` </summary>
+<details>
+```
 $ make results
 cd src && make results
 make[1]: Entering directory '/home/akira/ghq/github.com/intel/lmbench/src'
@@ -931,3 +936,4 @@ Memory partial read/write bandwidth
 
 [Wed Jul 30 06:17:19 AM JST 2025]
 ```
+</details>

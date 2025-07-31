@@ -62,6 +62,51 @@ $ sudo apt install libtirpc-dev
 $ make build CPPFLAGS="-I /usr/include/tirpc" LDFLAGS="-ltirpc" -j
 </code></pre></div></div>
 
+<h4 id="memory-read">Memory Read</h4>
+
+<blockquote>
+  <p>Output format is “%0.2f %.2f\n”, megabytes, megabytes_per_second,</p>
+</blockquote>
+
+<blockquote>
+  <p>measures  the  time  to read data into the processor.  It computes the sum of an array of integer values.  It accesses
+every fourth word.</p>
+</blockquote>
+
+<p>29.0 GiByte/sec</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/x86_64-linux-gnu/bw_mem -W 3 -N 10 1024m rd
+1073.74 29044.38
+</code></pre></div></div>
+
+<h4 id="memory-write">Memory Write</h4>
+
+<blockquote>
+  <p>measures the time to write data to memory.  It assigns a constant value to each memory of an array of integer  values.
+It accesses every fourth word.</p>
+</blockquote>
+
+<p>18.1 GiByte/sec</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/x86_64-linux-gnu/bw_mem -W 3 -N 10 1024m wr
+1073.74 18098.40
+</code></pre></div></div>
+
+<h4 id="memory-copy">Memory Copy</h4>
+
+<blockquote>
+  <p>measures the time to copy data from one location to another.  It does an array copy: dest[i] = source[i].  It accesses
+every fourth word.</p>
+</blockquote>
+
+<p>11.8 GiByte/sec</p>
+
+<p>Note: 1 / (1 / 18.1 + 1 / 29.0) = 11.1</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/x86_64-linux-gnu/bw_mem -W 3 -N 10 1024m cp
+1073.74 11845.05
+</code></pre></div></div>
+
 <h4 id="tcp-bandwidth">TCP bandwidth</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./bin/x86_64-linux-gnu/bw_tcp -s
 $ ./bin/x86_64-linux-gnu/bw_tcp -W 3 -N 10 -M 1024m localhost

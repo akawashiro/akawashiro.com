@@ -33,6 +33,35 @@ $ sudo apt install libtirpc-dev
 $ make build CPPFLAGS="-I /usr/include/tirpc" LDFLAGS="-ltirpc" -j
 ```
 
+#### TCP bandwidth
+```
+$ ./bin/x86_64-linux-gnu/bw_tcp -s
+$ ./bin/x86_64-linux-gnu/bw_tcp -W 3 -N 10 -M 1024m localhost
+1073.741824 5434.25 MB/sec
+```
+
+#### Pipe Bandwidth
+```
+$ ./bin/x86_64-linux-gnu/bw_pipe -W 3 -N 10 -M 1024m
+Pipe bandwidth: 3704.20 MB/sec
+```
+
+#### Syscall latency
+```
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 null
+Simple syscall: 0.1328 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 read
+Simple read: 0.2191 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 write
+Simple write: 0.2009 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 stat
+Simple stat: 1.0037 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 fstat
+Simple fstat: 0.3176 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 open
+Simple open/close: 2.1441 microseconds
+```
+
 <summary> Output of `make results` </summary>
 <details>
 ```

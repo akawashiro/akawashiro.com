@@ -31,6 +31,70 @@ index d233b37..f41d549 100755
  echo "main(int ac, char *av[]) { int i; }" > ${BASE}$$.c
 $ sudo apt install libtirpc-dev
 $ make build CPPFLAGS="-I /usr/include/tirpc" LDFLAGS="-ltirpc" -j
+```
+
+#### TCP bandwidth
+```
+$ ./bin/x86_64-linux-gnu/bw_tcp -s
+$ ./bin/x86_64-linux-gnu/bw_tcp -W 3 -N 10 -M 1024m localhost
+1073.741824 5434.25 MB/sec
+```
+
+#### Pipe Bandwidth
+```
+$ ./bin/x86_64-linux-gnu/bw_pipe -W 3 -N 10 -M 1024m
+Pipe bandwidth: 3704.20 MB/sec
+```
+
+#### Syscall Latency
+```
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 null
+Simple syscall: 0.1328 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 read
+Simple read: 0.2191 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 write
+Simple write: 0.2009 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 stat
+Simple stat: 1.0037 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 fstat
+Simple fstat: 0.3176 microseconds
+$ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 open
+Simple open/close: 2.1441 microseconds
+```
+
+#### File System Latency
+
+> The results are in terms of creates per second and deletes per second
+> as a function of file size.  The output is in 4 column  form  and  is
+> the  size  of the file, the number created, the creations per second,
+> and the removals per second.
+
+So for 10k files, we need 19 microseconds to create a file and 10.9
+microseconds to remove it.
+
+```
+$ ./bin/x86_64-linux-gnu/lat_fs
+0k      484     85877   142831
+1k      376     67529   111745
+4k      368     66402   109158
+10k     293     51758   91642
+```
+
+#### Context Switch Latency
+The unit is in microseconds.
+```
+$ ./bin/x86_64-linux-gnu/lat_ctx -W 3 -N 10 -s 1 2 4 8 16
+
+"size=1k ovr=0.67
+2 3.37
+4 3.80
+8 3.89
+16 4.25
+```
+
+<summary> Output of `make results` </summary>
+<details>
+```
 $ make results
 cd src && make results
 make[1]: Entering directory '/home/akira/ghq/github.com/intel/lmbench/src'
@@ -931,3 +995,4 @@ Memory partial read/write bandwidth
 
 [Wed Jul 30 06:17:19 AM JST 2025]
 ```
+</details>

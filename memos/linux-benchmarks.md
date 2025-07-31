@@ -46,7 +46,7 @@ $ ./bin/x86_64-linux-gnu/bw_pipe -W 3 -N 10 -M 1024m
 Pipe bandwidth: 3704.20 MB/sec
 ```
 
-#### Syscall latency
+#### Syscall Latency
 ```
 $ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 null
 Simple syscall: 0.1328 microseconds
@@ -60,6 +60,18 @@ $ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 fstat
 Simple fstat: 0.3176 microseconds
 $ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 open
 Simple open/close: 2.1441 microseconds
+```
+
+#### Context Switch Latency
+The unit is in microseconds.
+```
+$ ./bin/x86_64-linux-gnu/lat_ctx -W 3 -N 10 -s 1 2 4 8 16
+
+"size=1k ovr=0.67
+2 3.37
+4 3.80
+8 3.89
+16 4.25
 ```
 
 <summary> Output of `make results` </summary>

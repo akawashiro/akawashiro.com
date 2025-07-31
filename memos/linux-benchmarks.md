@@ -62,6 +62,24 @@ $ ./bin/x86_64-linux-gnu/lat_syscall -W 3 -N 10 open
 Simple open/close: 2.1441 microseconds
 ```
 
+#### File System Latency
+
+> The results are in terms of creates per second and deletes per second
+> as a function of file size.  The output is in 4 column  form  and  is
+> the  size  of the file, the number created, the creations per second,
+> and the removals per second.
+
+So for 10k files, we need 19 microseconds to create a file and 10.9
+microseconds to remove it.
+
+```
+$ ./bin/x86_64-linux-gnu/lat_fs
+0k      484     85877   142831
+1k      376     67529   111745
+4k      368     66402   109158
+10k     293     51758   91642
+```
+
 #### Context Switch Latency
 The unit is in microseconds.
 ```

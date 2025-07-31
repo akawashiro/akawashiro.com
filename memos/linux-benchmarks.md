@@ -33,6 +33,46 @@ $ sudo apt install libtirpc-dev
 $ make build CPPFLAGS="-I /usr/include/tirpc" LDFLAGS="-ltirpc" -j
 ```
 
+#### Memory Read
+
+> Output format is "%0.2f %.2f\n", megabytes, megabytes_per_second,
+
+> measures  the  time  to read data into the processor.  It computes the sum of an array of integer values.  It accesses
+> every fourth word.
+
+29.0 GiByte/sec
+
+```
+$ ./bin/x86_64-linux-gnu/bw_mem -W 3 -N 10 1024m rd
+1073.74 29044.38
+```
+
+#### Memory Write
+
+> measures the time to write data to memory.  It assigns a constant value to each memory of an array of integer  values.
+> It accesses every fourth word.
+
+18.1 GiByte/sec
+
+```
+$ ./bin/x86_64-linux-gnu/bw_mem -W 3 -N 10 1024m wr
+1073.74 18098.40
+```
+
+#### Memory Copy
+
+> measures the time to copy data from one location to another.  It does an array copy: dest[i] = source[i].  It accesses
+> every fourth word.
+
+11.8 GiByte/sec
+
+Note: 1 / (1 / 18.1 + 1 / 29.0) = 11.1
+
+```
+$ ./bin/x86_64-linux-gnu/bw_mem -W 3 -N 10 1024m cp
+1073.74 11845.05
+```
+
 #### TCP bandwidth
 ```
 $ ./bin/x86_64-linux-gnu/bw_tcp -s

@@ -101,7 +101,9 @@ layout: default
 ## Software and Hardware
 
 - [akbench](https://github.com/akawashiro/akbench/)
+  - akbench is a benchmark suite for Linux systems similar to lmbench.
 - [straceprof](https://akawashiro.com/software/straceprof/)
+  - straceprof is a profiler designed for multi-process programs. straceprof can take profile of any process when you can run it under strace. It is particularly well-suited for profiling build processes such as those initiated by make, cmake, shell scripts, or docker build. Upload the result of the follwoing command and visualize it.
 - [ros3fs](https://github.com/akawashiro/ros3fs)
   - ros3fs, Read Only S3 File System, is a Linux FUSE adapter for AWS S3 and S3 compatible object storage such as Apache Ozone. ros3fs focuses on speed, only speed.
 - [sloader](https://github.com/akawashiro/sloader)

@@ -102,6 +102,7 @@ layout: default
 
 - [akbench](https://github.com/akawashiro/akbench/)
   - akbench is a benchmark suite for Linux systems similar to lmbench.
+  - [Results on my computer](./slides/Bandwidth_Performance_Analysis_of_IPC_Mechanisms.pdf)
 - [straceprof](https://akawashiro.com/software/straceprof/)
   - straceprof is a profiler designed for multi-process programs. straceprof can take profile of any process when you can run it under strace. It is particularly well-suited for profiling build processes such as those initiated by make, cmake, shell scripts, or docker build. Upload the result of the follwoing command and visualize it.
 - [ros3fs](https://github.com/akawashiro/ros3fs)

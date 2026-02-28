@@ -165,3 +165,4 @@ layout: default
 - [Linux Benchmarks](./memos/linux-benchmarks.html)
 - [インサイド Windows 読書メモ (JA)](./memos/reading-inside-windows.html)
 - [相対性理論の入門記録](./memos/introduction_to_theory_of_relativity_jp.html)
+- [gpg の副鍵の期限を更新する方法](./memos/how-to-update-gpg-subkey-expiration.html)

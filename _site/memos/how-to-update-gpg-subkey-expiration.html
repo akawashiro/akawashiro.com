@@ -72,6 +72,11 @@ $ gpg --import 3FB4269CA58D57F0326C1F7488737135568C1AC5-seckey-sub-20260228.asc
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gpg --export --armor 3FB4269CA58D57F0326C1F7488737135568C1AC5 &gt; 3FB4269CA58D57F0326C1F7488737135568C1AC5.txt
 </code></pre></div></div>
 
+<h1 id="署名したファイルを更新する">署名したファイルを更新する</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gpg --clearsign I_am_Akira_Kawata.txt
+$ gpg --verify I_am_Akira_Kawata.txt.asc
+</code></pre></div></div>
+
 <h1 id="ほかのマシンで-subkey-を更新する">ほかのマシンで subkey を更新する</h1>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ curl https://akawashiro.com/3FB4269CA58D57F0326C1F7488737135568C1AC5.txt &gt; pubkey

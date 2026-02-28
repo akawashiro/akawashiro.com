@@ -47,6 +47,12 @@ $ gpg --import 3FB4269CA58D57F0326C1F7488737135568C1AC5-seckey-sub-20260228.asc
 $ gpg --export --armor 3FB4269CA58D57F0326C1F7488737135568C1AC5 > 3FB4269CA58D57F0326C1F7488737135568C1AC5.txt
 ```
 
+# 署名したファイルを更新する
+```
+$ gpg --clearsign I_am_Akira_Kawata.txt
+$ gpg --verify I_am_Akira_Kawata.txt.asc
+```
+
 # ほかのマシンで subkey を更新する
 
 ```

@@ -155,7 +155,12 @@ layout: default
 
 <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="600" height="400" src="https://mastofeed.com/apiv2/feed?userurl=https%3A%2F%2Fmstdn.jp%2Fusers%2Fa_kawashiro&theme=dark&size=100&header=true&replies=false&boosts=false"></iframe>
 
-[Link to the toot archive](./mastodon_archive.html)
+[Link to the toot archive from 2017-04-21 to 2023-12-27](./mastodon_archive.html)
+
+### Twitter
+
+- [Twitter](https://twitter.com/a_kawashiro)
+- [Link to the tweets archive from 2010-02-09 to 2026-03-01](./twitter_archive.html)
 
 ## Memos
 - [How to deploy this site](./memos/how-to-deploy-this-site.html)

@@ -173,3 +173,4 @@ layout: default
 - [相対性理論の入門記録](./memos/introduction_to_theory_of_relativity_jp.html)
 - [gpg の副鍵の期限を更新する方法](./memos/how-to-update-gpg-subkey-expiration.html)
 - [Twitter のアーカイブを更新する方法](./memos/how-to-generate-twitter-archive.html)
+- [写真の整理](./memos/how-to-sort-photos.html)

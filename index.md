@@ -174,3 +174,4 @@ layout: default
 - [gpg の副鍵の期限を更新する方法](./memos/how-to-update-gpg-subkey-expiration.html)
 - [Twitter のアーカイブを更新する方法](./memos/how-to-generate-twitter-archive.html)
 - [写真の整理](./memos/how-to-sort-photos.html)
+- [Gemfileのアップデート](./memos/how-to-update-gems.html)

@@ -176,3 +176,8 @@ layout: default
 - [写真の整理](./memos/how-to-sort-photos.html)
 - [Gemfileのアップデート](./memos/how-to-update-gems.html)
 - [プログラミング言語の国際会議](./memos/pl-conferences.html)
+- [YJIT: a basic block versioning JIT compiler for CRuby](./slides/yjit.pdf)
+- [DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving](./slides/distserve.pdf)
+- [Fast Inference from Transformers via Speculative Decoding](./slides/speculative_decode.pdf)
+- [Introduction of Zenbleed](./slides/zenbleed.pdf)
+- [vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention](./slides/vattention.pdf)

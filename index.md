@@ -175,3 +175,4 @@ layout: default
 - [Twitter のアーカイブを更新する方法](./memos/how-to-generate-twitter-archive.html)
 - [写真の整理](./memos/how-to-sort-photos.html)
 - [Gemfileのアップデート](./memos/how-to-update-gems.html)
+- [プログラミング言語の国際会議](./memos/pl-conferences.html)

@@ -40,6 +40,11 @@
 
 <h1 id="期限の切れた-subkey-を更新する">期限の切れた subkey を更新する</h1>
 
+<p><a href="https://wiki.archlinux.jp/index.php/GnuPG">注意</a>:</p>
+<blockquote>
+  <p>何か特段の事情がないかぎり、有効期限が切れたり無効になった副鍵を削除しないでください。削除してしまうとその副鍵で暗号化したファイルを復号化できなくなってしまいます。</p>
+</blockquote>
+
 <p><code class="language-plaintext highlighter-rouge">key 1</code>、<code class="language-plaintext highlighter-rouge">key 2</code>、<code class="language-plaintext highlighter-rouge">key 3</code> で <code class="language-plaintext highlighter-rouge">[S]</code>、<code class="language-plaintext highlighter-rouge">[E]</code>、<code class="language-plaintext highlighter-rouge">[A]</code> をそれぞれ選択して1年期限を延ばす。
 鍵の番号は固定されていないので<code class="language-plaintext highlighter-rouge">[S]</code>、<code class="language-plaintext highlighter-rouge">[E]</code>、<code class="language-plaintext highlighter-rouge">[A]</code>を目で確認すること。</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gpg --edit-key 3FB4269CA58D57F0326C1F7488737135568C1AC5

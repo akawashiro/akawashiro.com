@@ -39,6 +39,7 @@ layout: default
 
 ## Articles
 
+- [renlog](./articles/renlog-jp.html)
 - [How to Use MN-Core with MLSDK](https://docs.pfcomputing.com/mncore-sdk/pfcomp/codegen/MLSDK/index.html)
   - [Screenshot](./images/MLSDK_README.png)
 - [straceprof——とにかく簡単にビルドのプロファイルを取るためのソフトウェア](./articles/straceprof-jp) / [straceprof — A Software for Easily Profiling Build Processes](./articles/straceprof-en)

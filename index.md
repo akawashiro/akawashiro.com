@@ -103,6 +103,7 @@ layout: default
 
 - [akbench](https://github.com/akawashiro/akbench/)
   - akbench is a benchmark suite for Linux systems similar to lmbench.
+  - [Results on my computer](./slides/Bandwidth_Performance_Analysis_of_IPC_Mechanisms.pdf)
 - [straceprof](https://akawashiro.com/software/straceprof/)
   - straceprof is a profiler designed for multi-process programs. straceprof can take profile of any process when you can run it under strace. It is particularly well-suited for profiling build processes such as those initiated by make, cmake, shell scripts, or docker build. Upload the result of the follwoing command and visualize it.
 - [ros3fs](https://github.com/akawashiro/ros3fs)
@@ -147,6 +148,7 @@ layout: default
 - Fingure print: 3FB4269CA58D57F0326C1F7488737135568C1AC5
 - [Public key file](3FB4269CA58D57F0326C1F7488737135568C1AC5.txt)
 - [Signed text file](I_am_Akira_Kawata.txt.asc)
+  - You can check the signature with `curl -s https://akawashiro.com/I_am_Akira_Kawata.txt.asc | gpg --verify`.
 
 ## Current status
 
@@ -154,7 +156,12 @@ layout: default
 
 <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="600" height="400" src="https://mastofeed.com/apiv2/feed?userurl=https%3A%2F%2Fmstdn.jp%2Fusers%2Fa_kawashiro&theme=dark&size=100&header=true&replies=false&boosts=false"></iframe>
 
-[Link to the toot archive](./mastodon_archive.html)
+[Link to the toot archive from 2017-04-21 to 2023-12-27](./mastodon_archive.html)
+
+### Twitter
+
+- [Twitter](https://twitter.com/a_kawashiro)
+- [Link to the tweets archive from 2010-02-09 to 2026-03-01](./twitter_archive.html)
 
 ## Memos
 - [How to deploy this site](./memos/how-to-deploy-this-site.html)
@@ -164,3 +171,14 @@ layout: default
 - [How to profile using perfetto](./memos/how-to-profile-using-perfetto.html)
 - [Linux Benchmarks](./memos/linux-benchmarks.html)
 - [インサイド Windows 読書メモ (JA)](./memos/reading-inside-windows.html)
+- [相対性理論の入門記録](./memos/introduction_to_theory_of_relativity_jp.html)
+- [gpg の副鍵の期限を更新する方法](./memos/how-to-update-gpg-subkey-expiration.html)
+- [Twitter のアーカイブを更新する方法](./memos/how-to-generate-twitter-archive.html)
+- [写真の整理](./memos/how-to-sort-photos.html)
+- [Gemfileのアップデート](./memos/how-to-update-gems.html)
+- [プログラミング言語の国際会議](./memos/pl-conferences.html)
+- [YJIT: a basic block versioning JIT compiler for CRuby](./slides/yjit.pdf)
+- [DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving](./slides/distserve.pdf)
+- [Fast Inference from Transformers via Speculative Decoding](./slides/speculative_decode.pdf)
+- [Introduction of Zenbleed](./slides/zenbleed.pdf)
+- [vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention](./slides/vattention.pdf)

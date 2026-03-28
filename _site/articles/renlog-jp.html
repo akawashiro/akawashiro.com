@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>renlog | Akira Kawata</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="renlog" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="/articles/renlog-jp.html" />
+<meta property="og:url" content="/articles/renlog-jp.html" />
+<meta property="og:site_name" content="Akira Kawata" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="renlog" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"renlog","url":"/articles/renlog-jp.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Akira Kawata" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akira Kawata</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+      </nav></div>
+</header>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="renlog">renlog</h1>
+
+<p>ターミナルで実行したコマンドの標準出力と標準エラー出力をあとから見返したくなることがよくあります。
+たとえば、長いコマンドの出力を保存しておきたいときや、あとで「さっき何が出ていたっけ」と確認したいときです。</p>
+
+<p>僕は4年ほど <a href="https://github.com/omakoto/zenlog">zenlog</a> を使っていました。
+便利だったのですが、細かい挙動を自分好みに調整したくなってきたので、Rust で作り直してみました。<br />
+それが <a href="https://github.com/akawashiro/renlog">renlog</a> です。</p>
+
+<p><code class="language-plaintext highlighter-rouge">renlog</code> を使うと、シェル上で実行した各コマンドの出力をログファイルに保存できます。
+さらに、コマンド実行後にそのログファイルのパスが表示されるので、あとからすぐに開けます。</p>
+
+<h2 id="インストール方法">インストール方法</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cargo <span class="nb">install </span>renlog
+</code></pre></div></div>
+
+<p>でインストールして、<code class="language-plaintext highlighter-rouge">.bashrc</code> または <code class="language-plaintext highlighter-rouge">.zshrc</code> に以下の設定を書くと使えます。
+この設定では、シェル起動時に renlog がシェルをラップし、その内側で実行されたコマンドごとの出力を保存します。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>which renlog <span class="o">&gt;</span> /dev/null 2&gt;&amp;1<span class="p">;</span> <span class="k">then
+    if</span> <span class="o">[[</span> <span class="s2">"</span><span class="si">$(</span>ps <span class="nt">-o</span> <span class="nb">comm</span><span class="o">=</span> <span class="nt">-p</span> <span class="nv">$PPID</span><span class="si">)</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"renlog"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nv">renlog_dir</span><span class="o">=</span>/tmp/renlog
+        <span class="nb">exec </span>renlog <span class="nt">--log-level</span> info log <span class="nt">--renlog-dir</span> <span class="k">${</span><span class="nv">renlog_dir</span><span class="k">}</span> <span class="nt">--cmd</span> <span class="s1">'bash -l'</span>
+    <span class="k">else
+        </span><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>renlog show-bash-rc<span class="si">)</span><span class="s2">"</span>
+    <span class="k">fi
+fi</span>
+</code></pre></div></div>
+
+<div class="language-zsh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>which renlog <span class="o">&gt;</span> /dev/null 2&gt;&amp;1<span class="p">;</span> <span class="k">then
+    if</span> <span class="o">[[</span> <span class="s2">"</span><span class="si">$(</span>ps <span class="nt">-o</span> <span class="nb">comm</span><span class="o">=</span> <span class="nt">-p</span> <span class="nv">$PPID</span><span class="si">)</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"renlog"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nv">renlog_dir</span><span class="o">=</span>/tmp/renlog
+        <span class="nb">exec </span>renlog <span class="nt">--log-level</span> info log <span class="nt">--renlog-dir</span> <span class="k">${</span><span class="nv">renlog_dir</span><span class="k">}</span> <span class="nt">--cmd</span> <span class="s1">'zsh -l'</span>
+    <span class="k">else
+        </span><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>renlog show-zsh-rc<span class="si">)</span><span class="s2">"</span>
+    <span class="k">fi
+fi</span>
+</code></pre></div></div>
+
+<h2 id="利用方法">利用方法</h2>
+
+<p>設定を入れたうえで適当なコマンドを実行すると、実行結果の最後にログファイルへのパスが表示されます。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ls
+cgroup@  mnt@  pid@               time@               user@
+ipc@     net@  pid_for_children@  time_for_children@  uts@
+[/tmp/renlog-akira/14620/20260328_110823_496_ls--F---color_auto.log]
+</code></pre></div></div>
+
+<p>ログファイルには</p>
+
+<ul>
+  <li>実行したコマンド</li>
+  <li>実行時刻</li>
+  <li>終了コード</li>
+  <li>標準出力と標準エラー出力</li>
+</ul>
+
+<p>が保存されています。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat /tmp/renlog-akira/14620/20260328_110823_496_ls--F---color_auto.log
+# renlog Command Log
+# Command: ls -F --color=auto
+# Started: 2026-03-28 11:08:23 UTC
+# Exit Status: 0
+
+cgroup@  mnt@  pid@               time@               user@
+ipc@     net@  pid_for_children@  time_for_children@  uts@
+[/tmp/renlog-akira/14620/20260328_110935_647_cat-_tmp_renlog-akira_14620_20260328_110823_496_ls--F---color_auto.log.log]
+</code></pre></div></div>
+
+<p>さらに、次の設定を <code class="language-plaintext highlighter-rouge">.zshrc</code> に追加しておくと、Alt + 1 で直前のログを <code class="language-plaintext highlighter-rouge">neovim</code> で開けます。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>renlog_view_last_cmd() {
+    local last_log_file=$(cat ${RENLOG_LAST_LOG_FILE})
+    if [ -f "${last_log_file}" ]; then
+        nvim "${last_log_file}"
+    else
+        echo "No log file found."
+    fi
+}
+
+zle -N renlog_view_last_cmd
+bindkey -s '^[1' 'renlog_view_last_cmd\n'
+</code></pre></div></div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+</footer>
+</body>
+
+</html>

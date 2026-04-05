@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>よく使う APT 関連のコマンド | Akira Kawata</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="よく使う APT 関連のコマンド" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="/memos/apt_memo_jp.html" />
+<meta property="og:url" content="/memos/apt_memo_jp.html" />
+<meta property="og:site_name" content="Akira Kawata" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="よく使う APT 関連のコマンド" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"よく使う APT 関連のコマンド","url":"/memos/apt_memo_jp.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Akira Kawata" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akira Kawata</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+      </nav></div>
+</header>
+
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="よく使う-apt-関連のコマンド">よく使う APT 関連のコマンド</h1>
+
+<p><code class="language-plaintext highlighter-rouge">apt update</code> とか <code class="language-plaintext highlighter-rouge">apt install</code> の他に知っておくと便利なものたち。</p>
+
+<h2 id="ファイル名からパッケージを知りたい">ファイル名からパッケージを知りたい</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dpkg -S /usr/lib/libperf-jvmti.so 
+linux-perf: /usr/lib/libperf-jvmti.so
+</code></pre></div></div>
+
+<h2 id="どのパッケージをいれると-特定のファイルがインストールされるのか知りたい">どのパッケージをいれると 特定のファイルがインストールされるのか知りたい</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ apt-file search bin/rg
+...
+ripgrep: /usr/bin/rg
+...
+</code></pre></div></div>
+
+<h2 id="パッケージ名や説明から探したい">パッケージ名や説明から探したい</h2>
+
+<p>パッケージ名がうろ覚えのときに使う。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ apt search ripgrep
+$ apt search perf
+</code></pre></div></div>
+
+<h2 id="パッケージの詳細を見たい">パッケージの詳細を見たい</h2>
+
+<p>説明、依存関係、サイズ、提供元などを確認する。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ apt show ripgrep
+</code></pre></div></div>
+
+<h2 id="インストール済みのパッケージにどんなファイルが入っているか見たい">インストール済みのパッケージにどんなファイルが入っているか見たい</h2>
+
+<p>そのパッケージが配置したファイル一覧を見る。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dpkg -L ripgrep         
+/.
+/usr
+/usr/bin
+/usr/bin/rg
+...
+</code></pre></div></div>
+
+<h2 id="依存関係を見たい">依存関係を見たい</h2>
+
+<p>そのパッケージが何に依存しているかを見る。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ apt depends ripgrep
+</code></pre></div></div>
+
+<p>逆に、そのパッケージを必要としているものを見たいときはこうする。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ apt rdepends libssl3
+</code></pre></div></div>
+
+<h2 id="パッケージがインストール済みか確認したい">パッケージがインストール済みか確認したい</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dpkg -s ripgrep
+</code></pre></div></div>
+
+<h2 id="パッケージを削除したい">パッケージを削除したい</h2>
+
+<p>設定ファイルは残して削除する。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt remove ripgrep
+</code></pre></div></div>
+
+<p>設定ファイルも含めて完全に削除する。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt purge ripgrep
+</code></pre></div></div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+</footer>
+</body>
+
+</html>

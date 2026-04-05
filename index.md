@@ -164,6 +164,7 @@ layout: default
 - [Link to the tweets archive from 2010-02-09 to 2026-03-01](./twitter_archive.html)
 
 ## Memos
+- [よく使う APT 関連のコマンド](./memos/apt_memo_jp.html)
 - [How to deploy this site](./memos/how-to-deploy-this-site.html)
 - [syscall 命令がユーザ空間からカーネル空間にジャンプする仕組み (JA)](./memos/how-syscall-jump-from-user-code-to-kernel-code.html)
 - [VM の実装と性能](./memos/why-vm-slow.html)
